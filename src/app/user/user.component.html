@@ -1,0 +1,33 @@
+<p>user works!</p>
+
+@if (user != null){
+@if (mode==0) {
+    <div>
+      <h2>User Details</h2>
+  
+      <div>
+        <b>ID:</b> <span>{{ user.userId }}</span>
+      </div>
+  
+      <div>
+        <b>Username:</b> <span>{{ user.username }}</span>
+      </div>
+  
+      <div>
+        <b>Email:</b> <span>{{ user.email }}</span>
+      </div>
+  
+      <div>
+        <b>Password Hash:</b> <span>{{ user.passwordHash }}</span>
+      </div>
+  
+      <div>
+        <b>Created At:</b> <span>{{ user.createdAt }}</span>
+      </div>
+    </div>
+  }
+  @else {
+    <p>Nothing to display</p>
+  }
+  
+}
