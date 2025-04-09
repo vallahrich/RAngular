@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Restaurant } from '../models/restaurant.model';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/enviroments/enviroment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +15,24 @@ export class RestaurantService {
   constructor(private http: HttpClient) { }
 
   getRestaurantById(id: number): Observable<Restaurant> {
-    return this.http.get<Restaurant>(`${this.apiUrl}/${id}`);
+    return this.http.get<Restaurant>(`${this.apiUrl}/${id}`)
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching restaurant:', error);
+          throw error;
+        })
+      );
   }
 
   getAllRestaurants(): Observable<Restaurant[]> {
-    return this.http.get<Restaurant[]>(`${this.apiUrl}/filter`);
+    return this.http.get<Restaurant[]>(`${this.apiUrl}/filter`)
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching restaurants:', error);
+          // Return empty array instead of throwing to avoid breaking the UI
+          return of([]);
+        })
+      );
   }
 
   filterRestaurants(
@@ -44,6 +59,13 @@ export class RestaurantService {
       dietaryOptions.forEach(d => params = params.append('dietaryOptions', d));
     }
     
-    return this.http.get<Restaurant[]>(`${this.apiUrl}/filter`, { params });
+    return this.http.get<Restaurant[]>(`${this.apiUrl}/filter`, { params })
+      .pipe(
+        catchError(error => {
+          console.error('Error filtering restaurants:', error);
+          // Return empty array instead of throwing to avoid breaking the UI
+          return of([]);
+        })
+      );
   }
 }

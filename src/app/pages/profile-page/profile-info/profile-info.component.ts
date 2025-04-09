@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { User } from '../../../models/user.model';
+
 import { UserService } from '../../../services/user.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-profile-info',
@@ -59,7 +60,7 @@ export class ProfileInfoComponent implements OnInit {
     
     const updatedUser: User = {
       ...this.user,
-      username: this.f.username.value
+      username: this.f['username'].value
     };
     
     this.userService.updateUser(updatedUser).subscribe({

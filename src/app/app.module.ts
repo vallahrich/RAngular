@@ -17,7 +17,7 @@ import { HomePageComponent } from './pages/home-page/home-page.component';
 import { AuthPageComponent } from './pages/auth-page/auth-page.component';
 import { LoginComponent } from './pages/auth-page/login/login.component';
 import { RegisterComponent } from './pages/auth-page/register/register.component';
-import { RestaurantsPageComponent } from './pages/restaurants-page/restaurants-page.component';
+import { RestaurantsPageComponent } from './pages/restaurants-page/restaurant-page.component';
 import { FilterBarComponent } from './pages/restaurants-page/filter-bar/filter-bar.component';
 import { RestaurantDetailPageComponent } from './pages/restaurant-detail-page/restaurant-detail-page.component';
 import { RestaurantInfoComponent } from './pages/restaurant-detail-page/restaurant-info/restaurant-info.component';
@@ -27,6 +27,13 @@ import { ProfilePageComponent } from './pages/profile-page/profile-page.componen
 import { ProfileInfoComponent } from './pages/profile-page/profile-info/profile-info.component';
 import { PasswordSectionComponent } from './pages/profile-page/password-section/password-section.component';
 import { BookmarksSectionComponent } from './pages/profile-page/bookmarks-section/bookmarks-section.component';
+
+// Services
+import { AuthService } from './services/auth.service';
+import { RestaurantService } from './services/restaurant.service';
+import { ReviewService } from './services/review.service';
+import { BookmarkService } from './services/bookmark.service';
+import { UserService } from './services/user.service';
 
 @NgModule({
   declarations: [
@@ -59,7 +66,13 @@ import { BookmarksSectionComponent } from './pages/profile-page/bookmarks-sectio
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    AuthService,
+    RestaurantService,
+    ReviewService,
+    BookmarkService,
+    UserService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

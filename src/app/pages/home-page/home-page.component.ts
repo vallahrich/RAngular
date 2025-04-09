@@ -21,10 +21,17 @@ export class HomePageComponent implements OnInit {
   
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isLoggedIn();
+    
+    // Subscribe to auth changes to update UI when login status changes
+    this.authService.currentUser.subscribe(user => {
+      this.isLoggedIn = !!user;
+    });
+    
     this.loadFeaturedRestaurants();
   }
   
   loadFeaturedRestaurants(): void {
+    this.loading = true;
     this.restaurantService.getAllRestaurants().subscribe({
       next: (restaurants) => {
         this.featuredRestaurants = restaurants.slice(0, 6);

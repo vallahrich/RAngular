@@ -47,3 +47,61 @@ export class ReviewFormComponent implements OnInit {
       });
     }
   }
+  
+  onSubmit(): void {
+    this.submitted = true;
+    
+    if (this.reviewForm.invalid) {
+      return;
+    }
+    
+    this.loading = true;
+    
+    if (this.isEditing && this.review) {
+      // Updating existing review
+      const updatedReview: Review = {
+        ...this.review,
+        rating: parseInt(this.reviewForm.value.rating),
+        comment: this.reviewForm.value.comment
+      };
+      
+      this.reviewService.updateReview(updatedReview).subscribe({
+        next: (review) => {
+          this.loading = false;
+          this.reviewSubmitted.emit(review);
+        },
+        error: (error) => {
+          this.loading = false;
+          this.error = 'Failed to update review. Please try again.';
+          console.error('Error updating review:', error);
+        }
+      });
+    } else {
+      // Creating new review
+      const newReview: Review = {
+        reviewId: 0, // Will be set by server
+        userId: this.currentUserId,
+        restaurantId: this.restaurantId,
+        rating: parseInt(this.reviewForm.value.rating),
+        comment: this.reviewForm.value.comment,
+        createdAt: new Date()
+      };
+      
+      this.reviewService.createReview(newReview).subscribe({
+        next: (review) => {
+          this.loading = false;
+          this.reviewSubmitted.emit(review);
+        },
+        error: (error) => {
+          this.loading = false;
+          this.error = 'Failed to submit review. Please try again.';
+          console.error('Error submitting review:', error);
+        }
+      });
+    }
+  }
+  
+  onCancel(): void {
+    this.canceled.emit();
+  }
+}

@@ -57,8 +57,8 @@ export class PasswordSectionComponent implements OnInit {
     
     this.userService.updatePassword(
       this.userId,
-      this.f.currentPassword.value,
-      this.f.newPassword.value
+      this.f['currentPassword'].value,
+      this.f['newPassword'].value
     ).subscribe({
       next: () => {
         this.loading = false;

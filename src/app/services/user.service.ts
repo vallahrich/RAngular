@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { User } from '../models/user.model';
+
 import { PasswordUpdateRequest } from '../models/auth.model';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/enviroments/enviroment';
+import { User } from '../models/user.model';
+
 
 @Injectable({
   providedIn: 'root'

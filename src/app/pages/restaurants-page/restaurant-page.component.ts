@@ -5,8 +5,8 @@ import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-restaurants-page',
-  templateUrl: './restaurants-page.component.html',
-  styleUrls: ['./restaurants-page.component.css']
+  templateUrl: './restaurant-page.component.html',
+  styleUrls: ['./restaurant-page.component.css']
 })
 export class RestaurantsPageComponent implements OnInit {
   restaurants: Restaurant[] = [];

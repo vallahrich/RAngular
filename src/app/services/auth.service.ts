@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { User } from '../models/user.model';
 import { LoginRequest, RegisterRequest } from '../models/auth.model';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/enviroments/enviroment';
+import { User } from '../models/user.model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -29,11 +30,12 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<User> {
-    // In a real app, you should hash the password before sending
+    // In a real app, you would hash the password before sending
     const request: LoginRequest = { username, passwordHash: password };
     
     return this.http.post<User>(`${this.apiUrl}/login`, request).pipe(
       tap(user => {
+        // Store user details and jwt token in local storage to keep user logged in
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
       })
@@ -41,7 +43,7 @@ export class AuthService {
   }
 
   register(username: string, email: string, password: string): Observable<User> {
-    // In a real app, you should hash the password before sending
+    // In a real app, you would hash the password before sending
     const request: RegisterRequest = {
       username,
       email,
@@ -52,6 +54,7 @@ export class AuthService {
   }
 
   logout(): void {
+    // Remove user from local storage and set current user to null
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }
