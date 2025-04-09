@@ -1,0 +1,17 @@
+.card {
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .card-title {
+    color: #2c3e50;
+  }
+  
+  .card-subtitle {
+    color: #7f8c8d;
+  }
+  

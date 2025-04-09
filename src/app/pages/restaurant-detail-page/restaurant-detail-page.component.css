@@ -1,0 +1,18 @@
+h2 {
+    color: #343a40;
+  }
+  
+  .btn-primary {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+  }
+  
+  .btn-outline-primary {
+    color: #4CAF50;
+    border-color: #4CAF50;
+  }
+  
+  .btn-outline-primary:hover {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+  }

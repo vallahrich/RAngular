@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h2>Find Your Perfect Restaurant</h2>
+        <div *ngIf="isLoggedIn" class="alert alert-info">
+          Hi, {{ username }}! Find your perfect restaurant below.
+        </div>
+      </div>
+    </div>
+  
+    <app-filter-bar (filtersApplied)="onFiltersApplied($event)"></app-filter-bar>
+  
+    <div *ngIf="loading" class="text-center my-5">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  
+    <div *ngIf="error" class="alert alert-danger mt-3">
+      {{ error }}
+    </div>
+  
+    <div class="row mt-4">
+      <div *ngFor="let restaurant of restaurants" class="col-md-4 mb-4">
+        <app-restaurant-card [restaurant]="restaurant"></app-restaurant-card>
+      </div>
+      
+      <div *ngIf="!loading && restaurants.length === 0" class="col-12">
+        <div class="alert alert-info">
+          No restaurants found matching your filters. Try adjusting your criteria.
+        </div>
+      </div>
+    </div>
+  </div>
+  

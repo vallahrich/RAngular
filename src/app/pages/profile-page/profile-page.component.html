@@ -1,0 +1,41 @@
+<div class="container" *ngIf="user">
+    <div class="row mb-4">
+      <div class="col">
+        <h2>My Profile</h2>
+      </div>
+    </div>
+    
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ successMessage }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="successMessage = ''"></button>
+    </div>
+    
+    <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ errorMessage }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="errorMessage = ''"></button>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-4">
+        <app-profile-info 
+          [user]="user"
+          (profileUpdated)="onProfileUpdated($event)"
+          (error)="onError($event)">
+        </app-profile-info>
+        
+        <app-password-section
+          [userId]="user.userId"
+          (passwordUpdated)="onProfileUpdated($event)"
+          (error)="onError($event)">
+        </app-password-section>
+      </div>
+      
+      <div class="col-md-8">
+        <app-bookmarks-section
+          [userId]="user.userId"
+          (error)="onError($event)">
+        </app-bookmarks-section>
+      </div>
+    </div>
+  </div>
+  

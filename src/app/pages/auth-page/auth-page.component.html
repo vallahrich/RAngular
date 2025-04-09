@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-5">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link" [class.active]="showLogin" href="javascript:void(0)"
+                                (click)="showLogin = true">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [class.active]="!showLogin" href="javascript:void(0)"
+                                (click)="showLogin = false">Register</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <app-login *ngIf="showLogin" [returnUrl]="returnUrl"></app-login>
+                    <app-register *ngIf="!showLogin" (registered)="showLogin = true"></app-register>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

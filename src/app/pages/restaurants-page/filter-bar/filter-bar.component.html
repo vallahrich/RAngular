@@ -1,0 +1,56 @@
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Filter Restaurants</h5>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="filterForm">
+        <div class="row">
+          <div class="col-md-3 mb-3">
+            <label for="neighborhood" class="form-label">Neighborhood</label>
+            <select id="neighborhood" formControlName="neighborhood" class="form-select">
+              <option value="">All Neighborhoods</option>
+              <option *ngFor="let neighborhood of neighborhoods" [value]="neighborhood">
+                {{ neighborhood }}
+              </option>
+            </select>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <label for="cuisine" class="form-label">Cuisine</label>
+            <select id="cuisine" formControlName="cuisine" class="form-select">
+              <option value="">All Cuisines</option>
+              <option *ngFor="let cuisine of cuisines" [value]="cuisine">
+                {{ cuisine }}
+              </option>
+            </select>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <label for="priceRange" class="form-label">Price Range</label>
+            <select id="priceRange" formControlName="priceRange" class="form-select">
+              <option value="">All Prices</option>
+              <option value="L">$ (Budget)</option>
+              <option value="M">$$ (Moderate)</option>
+              <option value="H">$$$ (Luxury)</option>
+            </select>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <label for="dietaryOptions" class="form-label">Dietary Options</label>
+            <select id="dietaryOptions" formControlName="dietaryOptions" class="form-select">
+              <option value="">All Options</option>
+              <option value="Vegetarian">Vegetarian</option>
+              <option value="Vegan">Vegan</option>
+              <option value="Gluten-Free">Gluten-Free</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <button type="button" (click)="applyFilters()" class="btn btn-primary me-2">Apply Filters</button>
+            <button type="button" (click)="clearFilters()" class="btn btn-outline-secondary">Clear Filters</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>

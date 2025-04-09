@@ -1,0 +1,14 @@
+.btn-primary {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+  }
+  
+  .btn-primary:hover, .btn-primary:focus {
+    background-color: #3e8e41;
+    border-color: #3e8e41;
+  }
+  
+  .form-control:focus, .form-select:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.25);
+  }

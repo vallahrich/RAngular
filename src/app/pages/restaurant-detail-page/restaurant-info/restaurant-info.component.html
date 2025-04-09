@@ -1,0 +1,17 @@
+<div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Restaurant Details</h5>
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Address:</strong> {{ restaurant.address }}</p>
+          <p><strong>Neighborhood:</strong> {{ restaurant.neighborhood }}</p>
+          <p><strong>Cuisine:</strong> {{ restaurant.cuisine }}</p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Price Range:</strong> {{ getPriceRange(restaurant.priceRange) }}</p>
+          <p><strong>Opening Hours:</strong> {{ restaurant.openingHours || 'Not specified' }}</p>
+          <p><strong>Dietary Options:</strong> {{ restaurant.dietaryOptions || 'None specified' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>

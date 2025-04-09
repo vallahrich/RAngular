@@ -1,0 +1,35 @@
+<div class="card">
+    <div class="card-header">
+      <h5 class="mb-0">My Bookmarked Restaurants</h5>
+    </div>
+    <div class="card-body">
+      <div *ngIf="loading" class="text-center my-4">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading bookmarks...</span>
+        </div>
+      </div>
+      
+      <div *ngIf="!loading && bookmarkedRestaurants.length === 0" class="alert alert-info">
+        You haven't bookmarked any restaurants yet.
+      </div>
+      
+      <div *ngIf="!loading && bookmarkedRestaurants.length > 0" class="row">
+        <div *ngFor="let restaurant of bookmarkedRestaurants" class="col-md-6 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ restaurant.name }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{ restaurant.cuisine }} • {{ getPriceRange(restaurant.priceRange) }}</h6>
+              <p class="card-text mb-1"><strong>Neighborhood:</strong> {{ restaurant.neighborhood }}</p>
+              <div class="d-flex justify-content-between mt-3">
+                <a [routerLink]="['/restaurant', restaurant.restaurantId]" class="btn btn-sm btn-primary">View Details</a>
+                <button (click)="removeBookmark(restaurant.restaurantId)" class="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-bookmark-x me-1"></i>Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
