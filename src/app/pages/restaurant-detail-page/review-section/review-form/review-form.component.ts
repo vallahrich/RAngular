@@ -28,6 +28,9 @@ export class ReviewFormComponent implements OnInit {
     return this.authService.currentUserValue?.userId ?? 0;
   }
   
+  // Convenience getter for form fields
+  get f() { return this.reviewForm.controls; }
+  
   constructor(
     private formBuilder: FormBuilder,
     private reviewService: ReviewService,

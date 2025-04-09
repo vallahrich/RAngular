@@ -3,7 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Restaurant } from '../models/restaurant.model';
-import { environment } from 'src/enviroments/enviroment';
+import { environment } from 'src/environments/enviroment';
+
 
 
 @Injectable({

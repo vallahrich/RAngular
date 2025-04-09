@@ -1,57 +1,57 @@
 <div class="card mb-4">
-    <div class="card-header bg-light">
-      <h5 class="mb-0">{{ isEditing ? 'Edit Your Review' : 'Add Your Review' }}</h5>
-    </div>
-    <div class="card-body">
-      <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <label for="rating" class="form-label">Rating (1-5 stars)</label>
-          <select 
-            formControlName="rating" 
-            id="rating" 
-            class="form-select" 
-            [ngClass]="{ 'is-invalid': submitted && f.rating.errors }"
-          >
-            <option value="">Select Rating</option>
-            <option value="1">1 - Poor</option>
-            <option value="2">2 - Fair</option>
-            <option value="3">3 - Good</option>
-            <option value="4">4 - Very Good</option>
-            <option value="5">5 - Excellent</option>
-          </select>
-          <div *ngIf="submitted && f.rating.errors" class="invalid-feedback">
-            <div *ngIf="f.rating.errors.required">Rating is required</div>
-          </div>
-        </div>
-        
-        <div class="mb-3">
-          <label for="comment" class="form-label">Comment</label>
-          <textarea 
-            formControlName="comment" 
-            id="comment" 
-            class="form-control" 
-            rows="4"
-            [ngClass]="{ 'is-invalid': submitted && f.comment.errors }"
-            placeholder="Share your experience at this restaurant..."
-          ></textarea>
-          <div *ngIf="submitted && f.comment.errors" class="invalid-feedback">
-            <div *ngIf="f.comment.errors.maxlength">Comment cannot exceed 1000 characters</div>
-          </div>
-        </div>
-        
-        <div class="d-flex">
-          <button type="submit" class="btn btn-primary me-2" [disabled]="loading">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
-            {{ isEditing ? 'Update Review' : 'Submit Review' }}
-          </button>
-          <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
-            Cancel
-          </button>
-        </div>
-        
-        <div *ngIf="error" class="alert alert-danger mt-3">
-          {{ error }}
-        </div>
-      </form>
-    </div>
+  <div class="card-header bg-light">
+    <h5 class="mb-0">{{ isEditing ? 'Edit Your Review' : 'Add Your Review' }}</h5>
   </div>
+  <div class="card-body">
+    <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="rating" class="form-label">Rating (1-5 stars)</label>
+        <select 
+          formControlName="rating" 
+          id="rating" 
+          class="form-select" 
+          [ngClass]="{ 'is-invalid': submitted && f['rating'].errors }"
+        >
+          <option value="">Select Rating</option>
+          <option value="1">1 - Poor</option>
+          <option value="2">2 - Fair</option>
+          <option value="3">3 - Good</option>
+          <option value="4">4 - Very Good</option>
+          <option value="5">5 - Excellent</option>
+        </select>
+        <div *ngIf="submitted && f['rating'].errors" class="invalid-feedback">
+          <div *ngIf="f['rating'].errors['required']">Rating is required</div>
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <label for="comment" class="form-label">Comment</label>
+        <textarea 
+          formControlName="comment" 
+          id="comment" 
+          class="form-control" 
+          rows="4"
+          [ngClass]="{ 'is-invalid': submitted && f['comment'].errors }"
+          placeholder="Share your experience at this restaurant..."
+        ></textarea>
+        <div *ngIf="submitted && f['comment'].errors" class="invalid-feedback">
+          <div *ngIf="f['comment'].errors['maxlength']">Comment cannot exceed 1000 characters</div>
+        </div>
+      </div>
+      
+      <div class="d-flex">
+        <button type="submit" class="btn btn-primary me-2" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+          {{ isEditing ? 'Update Review' : 'Submit Review' }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
+          Cancel
+        </button>
+      </div>
+      
+      <div *ngIf="error" class="alert alert-danger mt-3">
+        {{ error }}
+      </div>
+    </form>
+  </div>
+</div>

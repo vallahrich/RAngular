@@ -1,60 +1,60 @@
 <div class="card mb-4">
-    <div class="card-header">
-      <h5 class="mb-0">Profile Information</h5>
+  <div class="card-header">
+    <h5 class="mb-0">Profile Information</h5>
+  </div>
+  <div class="card-body">
+    <div *ngIf="!isEditing" class="profile-info">
+      <p><strong>Username:</strong> {{ user.username }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Joined:</strong> {{ user.createdAt | date }}</p>
+      
+      <div class="d-grid gap-2">
+        <button (click)="startEditing()" class="btn btn-outline-primary">
+          <i class="bi bi-pencil-square me-2"></i>Edit Profile
+        </button>
+        <button (click)="deleteAccount()" class="btn btn-outline-danger">
+          <i class="bi bi-trash me-2"></i>Delete Account
+        </button>
+      </div>
     </div>
-    <div class="card-body">
-      <div *ngIf="!isEditing" class="profile-info">
-        <p><strong>Username:</strong> {{ user.username }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Joined:</strong> {{ user.createdAt | date }}</p>
-        
-        <div class="d-grid gap-2">
-          <button (click)="startEditing()" class="btn btn-outline-primary">
-            <i class="bi bi-pencil-square me-2"></i>Edit Profile
-          </button>
-          <button (click)="deleteAccount()" class="btn btn-outline-danger">
-            <i class="bi bi-trash me-2"></i>Delete Account
-          </button>
+    
+    <form *ngIf="isEditing" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input 
+          type="text" 
+          formControlName="username" 
+          id="username" 
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f['username'].errors }" 
+        />
+        <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
+          <div *ngIf="f['username'].errors['required']">Username is required</div>
+          <div *ngIf="f['username'].errors['minlength']">Username must be at least 3 characters</div>
         </div>
       </div>
       
-      <form *ngIf="isEditing" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
-          <input 
-            type="text" 
-            formControlName="username" 
-            id="username" 
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.username.errors }" 
-          />
-          <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-            <div *ngIf="f.username.errors.required">Username is required</div>
-            <div *ngIf="f.username.errors.minlength">Username must be at least 3 characters</div>
-          </div>
-        </div>
-        
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input 
-            type="email" 
-            value="{{ user.email }}" 
-            id="email" 
-            class="form-control" 
-            disabled 
-          />
-          <small class="form-text text-muted">Email cannot be changed</small>
-        </div>
-        
-        <div class="d-flex justify-content-between">
-          <button type="submit" class="btn btn-primary" [disabled]="loading">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
-            Save Changes
-          </button>
-          <button type="button" class="btn btn-outline-secondary" (click)="cancelEditing()">
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input 
+          type="email" 
+          value="{{ user.email }}" 
+          id="email" 
+          class="form-control" 
+          disabled 
+        />
+        <small class="form-text text-muted">Email cannot be changed</small>
+      </div>
+      
+      <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+          Save Changes
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="cancelEditing()">
+          Cancel
+        </button>
+      </div>
+    </form>
   </div>
+</div>

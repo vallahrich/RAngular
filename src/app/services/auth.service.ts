@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { LoginRequest, RegisterRequest } from '../models/auth.model';
-import { environment } from 'src/enviroments/enviroment';
 import { User } from '../models/user.model';
+import { environment } from 'src/environments/enviroment';
 
 
 @Injectable({
