@@ -10,7 +10,7 @@ import { environment } from 'src/environments/enviroment';
   providedIn: 'root'
 })
 export class BookmarkService {
-  private apiUrl = `${environment.apiUrl}/bookmark`;
+  private apiUrl = `${environment.apiUrl}/Bookmark`;
 
   constructor(private http: HttpClient) { }
 
@@ -23,9 +23,9 @@ export class BookmarkService {
   }
 
   addBookmark(userId: number, restaurantId: number): Observable<any> {
-    const bookmark: Bookmark = {
-      userId,
-      restaurantId,
+    const bookmark = {
+      userId: userId,
+      restaurantId: restaurantId,
       createdAt: new Date()
     };
     

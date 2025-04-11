@@ -21,11 +21,31 @@ export class ReviewService {
   }
 
   createReview(review: Review): Observable<Review> {
-    return this.http.post<Review>(`${this.apiUrl}`, review);
+    // Convert model property names to match C# backend
+    const apiReview = {
+      reviewId: review.reviewId,
+      userId: review.userId,
+      restaurantId: review.restaurantId,
+      rating: review.rating,
+      comment: review.comment,
+      createdAt: review.createdAt
+    };
+    
+    return this.http.post<Review>(`${this.apiUrl}`, apiReview);
   }
-
+  
   updateReview(review: Review): Observable<Review> {
-    return this.http.put<Review>(`${this.apiUrl}`, review);
+    // Convert model property names to match C# backend
+    const apiReview = {
+      reviewId: review.reviewId,
+      userId: review.userId,
+      restaurantId: review.restaurantId,
+      rating: review.rating,
+      comment: review.comment,
+      createdAt: review.createdAt
+    };
+    
+    return this.http.put<Review>(`${this.apiUrl}`, apiReview);
   }
 
   deleteReview(userId: number, restaurantId: number): Observable<any> {
