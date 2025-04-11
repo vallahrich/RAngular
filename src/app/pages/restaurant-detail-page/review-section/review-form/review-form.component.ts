@@ -1,3 +1,4 @@
+// File: src/app/pages/restaurant-detail-page/review-section/review-form/review-form.component.ts
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Review } from '../../../../models/review.model';
@@ -53,30 +54,44 @@ export class ReviewFormComponent implements OnInit {
   
   onSubmit(): void {
     this.submitted = true;
-    
+
+    // Stop if form is invalid
     if (this.reviewForm.invalid) {
       return;
     }
-    
+
     this.loading = true;
+    this.error = '';
     
     if (this.isEditing && this.review) {
       // Updating existing review
       const updatedReview: Review = {
-        ...this.review,
-        rating: parseInt(this.reviewForm.value.rating),
-        comment: this.reviewForm.value.comment
+        reviewId: this.review.reviewId,
+        userId: this.currentUserId,
+        restaurantId: this.restaurantId,
+        rating: Number(this.f['rating'].value), // Ensure it's a number
+        comment: this.f['comment'].value || "", // Ensure not null
+        createdAt: this.review.createdAt  // Keep the original creation date
       };
+
+      console.log('Updating review:', updatedReview);
       
       this.reviewService.updateReview(updatedReview).subscribe({
         next: (review) => {
+          console.log('Review updated successfully:', review);
           this.loading = false;
           this.reviewSubmitted.emit(review);
         },
         error: (error) => {
-          this.loading = false;
-          this.error = 'Failed to update review. Please try again.';
           console.error('Error updating review:', error);
+          this.loading = false;
+          if (error.status === 400) {
+            this.error = 'Invalid review data. Please check your input.';
+          } else if (error.status === 404) {
+            this.error = 'Review not found. It may have been deleted.';
+          } else {
+            this.error = 'Failed to update review. Please try again.';
+          }
         }
       });
     } else {
@@ -85,20 +100,34 @@ export class ReviewFormComponent implements OnInit {
         reviewId: 0, // Will be set by server
         userId: this.currentUserId,
         restaurantId: this.restaurantId,
-        rating: parseInt(this.reviewForm.value.rating),
-        comment: this.reviewForm.value.comment,
-        createdAt: new Date()
+        rating: Number(this.f['rating'].value), // Ensure it's a number
+        comment: this.f['comment'].value || "", // Ensure not null
+        createdAt: new Date() // Use current date
       };
+
+      console.log('Creating new review:', newReview);
+      console.log('User ID:', this.currentUserId);
+      console.log('Restaurant ID:', this.restaurantId);
       
       this.reviewService.createReview(newReview).subscribe({
         next: (review) => {
+          console.log('Review created successfully:', review);
           this.loading = false;
           this.reviewSubmitted.emit(review);
         },
         error: (error) => {
+          console.error('Error creating review:', error);
           this.loading = false;
-          this.error = 'Failed to submit review. Please try again.';
-          console.error('Error submitting review:', error);
+          
+          if (error.status === 409) {
+            this.error = 'You have already reviewed this restaurant.';
+          } else if (error.status === 400) {
+            this.error = 'Invalid review data. Please check your input.';
+          } else if (error.status === 404) {
+            this.error = 'Restaurant or user not found.';
+          } else {
+            this.error = 'Failed to submit review. Please try again.';
+          }
         }
       });
     }

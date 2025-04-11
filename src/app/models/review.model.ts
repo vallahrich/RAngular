@@ -4,6 +4,6 @@ export interface Review {
     restaurantId: number;
     rating: number;
     comment: string;
-    createdAt: Date;
-    username?: string; // Additional field to display username with review
-}
+    createdAt: Date | string;
+    username?: string; // Only for display, not sent to API
+  }

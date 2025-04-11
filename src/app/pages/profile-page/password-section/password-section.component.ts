@@ -60,8 +60,7 @@ export class PasswordSectionComponent implements OnInit {
       this.f['currentPassword'].value,
       this.f['newPassword'].value
     ).subscribe({
-      next: (response) => {
-        // The problem is here - we need to handle any response format
+      next: () => {  // Accept any response format
         this.loading = false;
         this.passwordForm.reset();
         this.submitted = false;
