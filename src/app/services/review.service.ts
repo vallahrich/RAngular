@@ -1,7 +1,6 @@
-// File: src/app/services/review.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, map, catchError, throwError } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { Review } from '../models/review.model';
 import { environment } from 'src/environments/enviroment';
 
@@ -16,23 +15,7 @@ export class ReviewService {
   getReviewsByRestaurantId(restaurantId: number): Observable<Review[]> {
     return this.http.get<any[]>(`${this.apiUrl}/restaurant/${restaurantId}`).pipe(
       map(reviews => {
-        // Map to our Review interface, handling any nested objects
-        return reviews.map(rawReview => {
-          // Extract username safely using optional chaining and type assertion
-          const usernameFromResponse = rawReview.username || 
-            (rawReview.hasOwnProperty('user') ? (rawReview as any).user?.username : undefined);
-          
-          const cleanReview: Review = {
-            reviewId: rawReview.reviewId,
-            userId: rawReview.userId,
-            restaurantId: rawReview.restaurantId,
-            rating: rawReview.rating,
-            comment: rawReview.comment || "",
-            createdAt: rawReview.createdAt,
-            username: usernameFromResponse
-          };
-          return cleanReview;
-        });
+        return reviews.map(r => this.mapApiResponseToReview(r));
       }),
       catchError(error => {
         console.error('Error fetching reviews:', error);
@@ -43,25 +26,8 @@ export class ReviewService {
 
   getUserReviewForRestaurant(userId: number, restaurantId: number): Observable<Review> {
     return this.http.get<any>(`${this.apiUrl}/user/${userId}/restaurant/${restaurantId}`).pipe(
-      map(rawReview => {
-        // Extract username safely using optional chaining and type assertion
-        const usernameFromResponse = rawReview.username || 
-          (rawReview.hasOwnProperty('user') ? (rawReview as any).user?.username : undefined);
-        
-        // Clean up the review object to match our interface
-        const cleanReview: Review = {
-          reviewId: rawReview.reviewId,
-          userId: rawReview.userId,
-          restaurantId: rawReview.restaurantId,
-          rating: rawReview.rating,
-          comment: rawReview.comment || "",
-          createdAt: rawReview.createdAt,
-          username: usernameFromResponse
-        };
-        return cleanReview;
-      }),
+      map(r => this.mapApiResponseToReview(r)),
       catchError(error => {
-        // Only log errors that aren't 404 (not found)
         if (error.status !== 404) {
           console.error('Error fetching user review:', error);
         }
@@ -71,87 +37,39 @@ export class ReviewService {
   }
 
   createReview(review: Review): Observable<Review> {
-    // Format the review exactly as the backend expects it
-    const apiReview = {
-      reviewId: 0, // Always use 0 for new reviews
+    // Only send exactly what the API expects for a new review
+    const payload = {
       userId: review.userId,
       restaurantId: review.restaurantId,
-      rating: Number(review.rating), // Ensure rating is a number
-      comment: review.comment || "", // Ensure comment is never null
-      createdAt: typeof review.createdAt === 'string' 
-        ? review.createdAt 
-        : (review.createdAt ? review.createdAt.toISOString() : new Date().toISOString())
+      rating: review.rating,
+      comment: review.comment || ""
     };
     
-    console.log('Creating review with payload:', JSON.stringify(apiReview));
+    console.log('Creating review with payload:', JSON.stringify(payload));
     
-    const headers = new HttpHeaders()
-      .set('Content-Type', 'application/json');
-    
-    return this.http.post<any>(this.apiUrl, apiReview, { headers }).pipe(
-      map(rawResponse => {
-        // Extract username safely using optional chaining and type assertion
-        const usernameFromResponse = rawResponse.username || 
-          (rawResponse.hasOwnProperty('user') ? (rawResponse as any).user?.username : undefined);
-        
-        // Clean up the response to match our interface
-        const cleanResponse: Review = {
-          reviewId: rawResponse.reviewId,
-          userId: rawResponse.userId,
-          restaurantId: rawResponse.restaurantId,
-          rating: rawResponse.rating,
-          comment: rawResponse.comment || "",
-          createdAt: rawResponse.createdAt,
-          username: usernameFromResponse
-        };
-        return cleanResponse;
-      }),
+    return this.http.post<any>(this.apiUrl, payload).pipe(
+      map(r => this.mapApiResponseToReview(r)),
       catchError(error => {
         console.error('Error creating review:', error);
-        if (error.status === 400) {
-          console.error('Review validation failed. Request payload:', apiReview);
-        }
         return throwError(() => error);
       })
     );
   }
   
   updateReview(review: Review): Observable<Review> {
-    // Format the review exactly as the backend expects it
-    const apiReview = {
+    // For update, we need to include the reviewId
+    const payload = {
       reviewId: review.reviewId,
       userId: review.userId,
       restaurantId: review.restaurantId,
-      rating: Number(review.rating), // Ensure rating is a number
-      comment: review.comment || "", // Ensure comment is never null
-      createdAt: typeof review.createdAt === 'string' 
-        ? review.createdAt 
-        : (review.createdAt ? review.createdAt.toISOString() : new Date().toISOString())
+      rating: review.rating,
+      comment: review.comment || ""
     };
     
-    console.log('Updating review with payload:', JSON.stringify(apiReview));
+    console.log('Updating review with payload:', JSON.stringify(payload));
     
-    const headers = new HttpHeaders()
-      .set('Content-Type', 'application/json');
-    
-    return this.http.put<any>(this.apiUrl, apiReview, { headers }).pipe(
-      map(rawResponse => {
-        // Extract username safely using optional chaining and type assertion
-        const usernameFromResponse = rawResponse.username || 
-          (rawResponse.hasOwnProperty('user') ? (rawResponse as any).user?.username : undefined);
-        
-        // Clean up the response to match our interface
-        const cleanResponse: Review = {
-          reviewId: rawResponse.reviewId,
-          userId: rawResponse.userId,
-          restaurantId: rawResponse.restaurantId,
-          rating: rawResponse.rating,
-          comment: rawResponse.comment || "",
-          createdAt: rawResponse.createdAt,
-          username: usernameFromResponse
-        };
-        return cleanResponse;
-      }),
+    return this.http.put<any>(this.apiUrl, payload).pipe(
+      map(r => this.mapApiResponseToReview(r)),
       catchError(error => {
         console.error('Error updating review:', error);
         return throwError(() => error);
@@ -166,5 +84,19 @@ export class ReviewService {
         return throwError(() => error);
       })
     );
+  }
+
+  // Helper method to consistently map API responses to our Review model
+  private mapApiResponseToReview(rawResponse: any): Review {
+    return {
+      reviewId: rawResponse.reviewId,
+      userId: rawResponse.userId,
+      restaurantId: rawResponse.restaurantId,
+      rating: rawResponse.rating,
+      comment: rawResponse.comment || "",
+      createdAt: rawResponse.createdAt,
+      username: rawResponse.username || 
+        (rawResponse.hasOwnProperty('user') ? (rawResponse as any).user?.username : undefined)
+    };
   }
 }

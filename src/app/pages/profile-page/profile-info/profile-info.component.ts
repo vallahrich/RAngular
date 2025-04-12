@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 import { UserService } from '../../../services/user.service';
 import { AuthService } from '../../../services/auth.service';
-import { Router } from '@angular/router';
 import { User } from 'src/app/models/user.model';
+import { ConfirmationDialogComponent } from '../../../shared/dialogs/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-profile-info',
@@ -25,7 +27,8 @@ export class ProfileInfoComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
   
   ngOnInit(): void {
@@ -95,19 +98,31 @@ export class ProfileInfoComponent implements OnInit {
   }
   
   deleteAccount(): void {
-    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-      this.loading = true;
-      this.userService.deleteUser(this.user.userId).subscribe({
-        next: () => {
-          this.authService.logout();
-          this.router.navigate(['/']);
-        },
-        error: (err) => {
-          this.loading = false;
-          this.error.emit('Failed to delete account. Please try again.');
-          console.error('Error deleting account:', err);
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px',
+      data: {
+        title: 'Delete Account',
+        message: 'Are you sure you want to delete your account? This action cannot be undone.',
+        confirmText: 'Delete Account',
+        confirmColor: 'warn'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.userService.deleteUser(this.user.userId).subscribe({
+          next: () => {
+            this.authService.logout();
+            this.router.navigate(['/']);
+          },
+          error: (err) => {
+            this.loading = false;
+            this.error.emit('Failed to delete account. Please try again.');
+            console.error('Error deleting account:', err);
+          }
+        });
+      }
+    });
   }
 }

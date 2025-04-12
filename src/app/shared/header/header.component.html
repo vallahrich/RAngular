@@ -1,40 +1,35 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" routerLink="/">Copenhagen Restaurant Explorer</a>
-      <button class="navbar-toggler" type="button" (click)="toggleMenu()">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" [ngClass]="{'show': !isMenuCollapsed}">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/" routerLinkActive="active"
-               [routerLinkActiveOptions]="{exact: true}">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/restaurants" routerLinkActive="active">Restaurants</a>
-          </li>
-        </ul>
-        
-        <ul class="navbar-nav">
-          <ng-container *ngIf="!isLoggedIn">
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/auth" routerLinkActive="active">Sign In</a>
-            </li>
-          </ng-container>
-          
-          <ng-container *ngIf="isLoggedIn">
-            <li class="nav-item">
-              <span class="nav-link welcome-text">Hi, {{ currentUser?.username }}</span>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/profile" routerLinkActive="active">Profile</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="javascript:void(0)" (click)="logout()">Logout</a>
-            </li>
-          </ng-container>
-        </ul>
-      </div>
-    </div>
-  </nav>
+<mat-toolbar color="primary">
+  <a mat-button routerLink="/" class="app-title">Copenhagen Restaurant Explorer</a>
   
+  <span class="spacer"></span>
+  
+  <div>
+    <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
+      <mat-icon>home</mat-icon> Home
+    </a>
+    <a mat-button routerLink="/restaurants" routerLinkActive="active-link">
+      <mat-icon>restaurant</mat-icon> Restaurants
+    </a>
+    
+    <ng-container *ngIf="!isLoggedIn">
+      <a mat-button routerLink="/auth" routerLinkActive="active-link">
+        <mat-icon>login</mat-icon> Sign In
+      </a>
+    </ng-container>
+    
+    <ng-container *ngIf="isLoggedIn">
+      <button mat-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+        {{ currentUser?.username }}
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <a mat-menu-item routerLink="/profile">
+          <mat-icon>person</mat-icon> Profile
+        </a>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon> Logout
+        </button>
+      </mat-menu>
+    </ng-container>
+  </div>
+</mat-toolbar>

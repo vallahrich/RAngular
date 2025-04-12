@@ -1,18 +1,21 @@
-<div class="card mb-3">
-    <div class="card-body">
-      <div class="d-flex justify-content-between align-items-center">
-        <div>
-          <h5 class="card-title">
-            {{ review.username || 'Anonymous' }}
-            <span class="rating-stars ms-2">{{ getRatingStars(review.rating) }}</span>
-          </h5>
-          <small class="text-muted">{{ review.createdAt | date }}</small>
-        </div>
-        <div *ngIf="isOwnReview" class="review-actions">
-          <button (click)="onEdit()" class="btn btn-sm btn-outline-primary me-2">Edit</button>
-          <button (click)="onDelete()" class="btn btn-sm btn-outline-danger">Delete</button>
-        </div>
-      </div>
-      <p class="card-text mt-3">{{ review.comment }}</p>
+<mat-card class="review-card">
+  <mat-card-header>
+    <mat-card-title class="review-header">
+      <span>{{ review.username || 'Anonymous' }}</span>
+      <span class="rating-stars">{{ getRatingStars(review.rating) }}</span>
+    </mat-card-title>
+    <mat-card-subtitle>{{ review.createdAt | date }}</mat-card-subtitle>
+    <div class="spacer"></div>
+    <div *ngIf="isOwnReview" class="review-actions">
+      <button mat-icon-button color="primary" (click)="onEdit()" matTooltip="Edit Review">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="onDelete()" matTooltip="Delete Review">
+        <mat-icon>delete</mat-icon>
+      </button>
     </div>
-  </div>
+  </mat-card-header>
+  <mat-card-content>
+    <p>{{ review.comment }}</p>
+  </mat-card-content>
+</mat-card>

@@ -15,6 +15,9 @@ export class PasswordSectionComponent implements OnInit {
   passwordForm!: FormGroup;
   loading = false;
   submitted = false;
+  hideCurrentPassword = true;
+  hideNewPassword = true;
+  hideConfirmPassword = true;
   
   constructor(
     private formBuilder: FormBuilder,
@@ -60,7 +63,7 @@ export class PasswordSectionComponent implements OnInit {
       this.f['currentPassword'].value,
       this.f['newPassword'].value
     ).subscribe({
-      next: () => {  // Accept any response format
+      next: () => {
         this.loading = false;
         this.passwordForm.reset();
         this.submitted = false;

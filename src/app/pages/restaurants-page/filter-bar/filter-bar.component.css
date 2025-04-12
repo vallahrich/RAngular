@@ -1,18 +1,29 @@
-.form-select:focus {
-    border-color: #4CAF50;
-    box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.25);
+.filter-card {
+  margin-bottom: 24px;
+}
+
+.filter-form {
+  padding: 8px 0;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 16px;
+  padding: 8px 16px 16px;
+}
+
+@media (max-width: 768px) {
+  .filter-actions {
+    flex-direction: column;
   }
   
-  .btn-primary {
-    background-color: #4CAF50;
-    border-color: #4CAF50;
+  .filter-actions button {
+    width: 100%;
   }
-  
-  .btn-primary:hover, .btn-primary:focus {
-    background-color: #3e8e41;
-    border-color: #3e8e41;
-  }
-  
-  .card-header {
-    background-color: #4CAF50 !important;
-  }
+}

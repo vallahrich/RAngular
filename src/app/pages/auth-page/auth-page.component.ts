@@ -15,7 +15,7 @@ export class AuthPageComponent {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
   }
   
-  toggleView(): void {
-    this.showLogin = !this.showLogin;
+  tabChanged(index: number): void {
+    this.showLogin = index === 0;
   }
 }

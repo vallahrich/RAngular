@@ -1,17 +1,24 @@
-.card {
-    transition: transform 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  }
-  
-  .card:hover {
-    transform: translateY(-5px);
-  }
-  
-  .card-title {
-    color: #2c3e50;
-  }
-  
-  .card-subtitle {
-    color: #7f8c8d;
-  }
-  
+.restaurant-card {
+  height: 100%;
+}
+
+.mat-mdc-card-title {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.mat-mdc-card-subtitle {
+  margin-bottom: 12px;
+}
+
+.mat-mdc-card-content {
+  margin-bottom: 16px;
+}
+
+.mat-mdc-card-content p {
+  margin-bottom: 8px;
+}
+
+.mat-mdc-card-actions {
+  padding: 8px 16px 16px;
+}

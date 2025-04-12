@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
+import { MaterialModule } from './material.module';
 import { AppComponent } from './app.component';
 
 // Shared Components
@@ -11,6 +13,7 @@ import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { RestaurantCardComponent } from './shared/ui/restaurant-card/restaurant-card.component';
 import { ReviewItemComponent } from './shared/ui/review-item/review-item.component';
+import { ConfirmationDialogComponent } from './shared/dialogs/confirmation-dialog/confirmation-dialog.component';
 
 // Page Components
 import { HomePageComponent } from './pages/home-page/home-page.component';
@@ -43,6 +46,7 @@ import { UserService } from './services/user.service';
     FooterComponent,
     RestaurantCardComponent,
     ReviewItemComponent,
+    ConfirmationDialogComponent,
     // Page Components
     HomePageComponent,
     AuthPageComponent,
@@ -61,10 +65,12 @@ import { UserService } from './services/user.service';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule, // Using this for animations
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MaterialModule
   ],
   providers: [
     AuthService,
@@ -72,7 +78,8 @@ import { UserService } from './services/user.service';
     ReviewService,
     BookmarkService,
     UserService
+    // Removed provideAnimationsAsync() since we're using BrowserAnimationsModule instead
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { } // This line was missing

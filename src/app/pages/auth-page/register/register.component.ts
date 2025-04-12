@@ -15,6 +15,8 @@ export class RegisterComponent implements OnInit {
   submitted = false;
   error = '';
   success = '';
+  hidePassword = true;
+  hideConfirmPassword = true;
 
   constructor(
     private formBuilder: FormBuilder,

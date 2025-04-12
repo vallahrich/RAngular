@@ -1,39 +1,36 @@
 <div class="container">
-    <div *ngIf="loading" class="text-center my-5">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-      <p class="mt-2">Loading restaurant details...</p>
-    </div>
-  
-    <div *ngIf="error" class="alert alert-danger mt-3">
-      {{ error }}
-    </div>
-  
-    <div *ngIf="restaurant && !loading">
-      <div class="row mb-4">
-        <div class="col-md-8">
-          <h2>{{ restaurant.name }}</h2>
-          <p class="lead">{{ restaurant.cuisine }} Cuisine</p>
-        </div>
-        <div class="col-md-4 text-md-end" *ngIf="isLoggedIn">
-          <button 
-            class="btn" 
-            [class.btn-outline-primary]="!isBookmarked" 
-            [class.btn-primary]="isBookmarked"
-            (click)="toggleBookmark()">
-            <i class="bi" [class.bi-bookmark]="!isBookmarked" [class.bi-bookmark-fill]="isBookmarked"></i>
-            {{ isBookmarked ? 'Bookmarked' : 'Bookmark' }}
-          </button>
-        </div>
-      </div>
-  
-      <app-restaurant-info [restaurant]="restaurant"></app-restaurant-info>
-      
-      <app-review-section 
-        [restaurantId]="restaurantId"
-        [isLoggedIn]="isLoggedIn">
-      </app-review-section>
-    </div>
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading restaurant details...</p>
   </div>
-  
+
+  <div *ngIf="error" class="error-container">
+    <mat-card>
+      <mat-card-content class="error-content">
+        <mat-icon color="warn">error</mat-icon>
+        <span>{{ error }}</span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="restaurant && !loading" class="restaurant-detail">
+    <div class="restaurant-header">
+      <div class="restaurant-title">
+        <h1>{{ restaurant.name }}</h1>
+        <h2>{{ restaurant.cuisine }} Cuisine</h2>
+      </div>
+
+      <div *ngIf="isLoggedIn" class="bookmark-action">
+        <button mat-raised-button [color]="isBookmarked ? 'primary' : ''" (click)="toggleBookmark()">
+          <mat-icon>{{ isBookmarked ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+          {{ isBookmarked ? 'Bookmarked' : 'Bookmark' }}
+        </button>
+      </div>
+    </div>
+
+    <app-restaurant-info [restaurant]="restaurant"></app-restaurant-info>
+
+    <app-review-section [restaurantId]="restaurantId" [isLoggedIn]="isLoggedIn">
+    </app-review-section>
+  </div>
+</div>

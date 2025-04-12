@@ -1,9 +1,35 @@
-.btn-primary {
-    background-color: #4CAF50;
-    border-color: #4CAF50;
-  }
-  
-  .btn-primary:hover, .btn-primary:focus {
-    background-color: #3e8e41;
-    border-color: #3e8e41;
-  }
+.register-form {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0;
+}
+
+.form-actions {
+  margin-top: 16px;
+}
+
+.submit-button {
+  width: 100%;
+}
+
+.error-message {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.success-message {
+  margin-top: 16px;
+  color: #4caf50;
+  display: flex;
+  align-items: center;
+}
+
+.success-message mat-icon,
+.error-message mat-icon {
+  margin-right: 8px;
+}
+
+.spinner-margin {
+  margin: 0 8px;
+}

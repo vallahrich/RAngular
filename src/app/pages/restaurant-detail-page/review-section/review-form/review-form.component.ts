@@ -1,25 +1,76 @@
-// File: src/app/pages/restaurant-detail-page/review-section/review-form/review-form.component.ts
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Review } from '../../../../models/review.model';
-import { ReviewService } from '../../../../services/review.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../../../services/auth.service';
+import { environment } from 'src/environments/enviroment';
+import { Review } from '../../../../models/review.model';
 
 @Component({
   selector: 'app-review-form',
-  templateUrl: './review-form.component.html',
+  template: `
+    <div class="card mb-4">
+      <div class="card-header bg-light">
+        <h5 class="mb-0">{{ isEditing ? 'Edit Your Review' : 'Add Your Review' }}</h5>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="rating" class="form-label">Rating (1-5 stars) <span class="text-danger">*</span></label>
+            <select formControlName="rating" id="rating" class="form-select">
+              <option value="1">1 - Poor</option>
+              <option value="2">2 - Fair</option>
+              <option value="3">3 - Good</option>
+              <option value="4">4 - Very Good</option>
+              <option value="5">5 - Excellent</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="comment" class="form-label">Comment</label>
+            <textarea 
+              formControlName="comment" 
+              id="comment" 
+              class="form-control" 
+              rows="3"
+              placeholder="Share your experience...">
+            </textarea>
+          </div>
+          
+          <div class="d-flex">
+            <button type="submit" class="btn btn-primary me-2" [disabled]="loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+              {{ isEditing ? 'Update Review' : 'Submit Review' }}
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
+              Cancel
+            </button>
+          </div>
+          
+          <div *ngIf="error" class="alert alert-danger mt-3">
+            {{ error }}
+          </div>
+          
+          <div *ngIf="successMessage" class="alert alert-success mt-3">
+            {{ successMessage }}
+          </div>
+        </form>
+      </div>
+    </div>
+  `,
   styleUrls: ['./review-form.component.css']
 })
 export class ReviewFormComponent implements OnInit {
   @Input() restaurantId!: number;
   @Input() review: Review | null = null;
-  @Output() reviewSubmitted = new EventEmitter<Review>();
+  @Output() reviewSubmitted = new EventEmitter<any>();
   @Output() canceled = new EventEmitter<void>();
   
   reviewForm!: FormGroup;
   loading = false;
   submitted = false;
   error = '';
+  successMessage = '';
+  apiUrl = `${environment.apiUrl}/review`;
   
   get isEditing(): boolean {
     return !!this.review;
@@ -29,24 +80,23 @@ export class ReviewFormComponent implements OnInit {
     return this.authService.currentUserValue?.userId ?? 0;
   }
   
-  // Convenience getter for form fields
   get f() { return this.reviewForm.controls; }
   
   constructor(
     private formBuilder: FormBuilder,
-    private reviewService: ReviewService,
-    private authService: AuthService
+    private authService: AuthService,
+    private http: HttpClient
   ) {}
   
   ngOnInit(): void {
     this.reviewForm = this.formBuilder.group({
-      rating: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
+      rating: ['5', [Validators.required]],
       comment: ['', Validators.maxLength(1000)]
     });
     
     if (this.review) {
       this.reviewForm.patchValue({
-        rating: this.review.rating,
+        rating: this.review.rating.toString(),
         comment: this.review.comment
       });
     }
@@ -54,82 +104,116 @@ export class ReviewFormComponent implements OnInit {
   
   onSubmit(): void {
     this.submitted = true;
+    
+    this.error = '';
+    this.successMessage = '';
 
-    // Stop if form is invalid
     if (this.reviewForm.invalid) {
       return;
     }
 
     this.loading = true;
-    this.error = '';
+    
+    // ASP.NET Core model binding likes it when numbers are sent as numbers, not strings
+    const rating = parseInt(this.f['rating'].value);
     
     if (this.isEditing && this.review) {
-      // Updating existing review
-      const updatedReview: Review = {
+      // Update existing review with navigation properties
+      const reviewModel = {
         reviewId: this.review.reviewId,
         userId: this.currentUserId,
         restaurantId: this.restaurantId,
-        rating: Number(this.f['rating'].value), // Ensure it's a number
-        comment: this.f['comment'].value || "", // Ensure not null
-        createdAt: this.review.createdAt  // Keep the original creation date
+        rating: rating,
+        comment: this.f['comment'].value || "",
+        // Include navigation properties that the backend requires
+        User: { userId: this.currentUserId },
+        Restaurant: { restaurantId: this.restaurantId }
       };
-
-      console.log('Updating review:', updatedReview);
       
-      this.reviewService.updateReview(updatedReview).subscribe({
-        next: (review) => {
-          console.log('Review updated successfully:', review);
-          this.loading = false;
-          this.reviewSubmitted.emit(review);
-        },
-        error: (error) => {
-          console.error('Error updating review:', error);
-          this.loading = false;
-          if (error.status === 400) {
-            this.error = 'Invalid review data. Please check your input.';
-          } else if (error.status === 404) {
-            this.error = 'Review not found. It may have been deleted.';
-          } else {
-            this.error = 'Failed to update review. Please try again.';
+      console.log('Updating review with payload:', JSON.stringify(reviewModel));
+      
+      // Explicitly set content-type for ASP.NET Core
+      const headers = new HttpHeaders()
+        .set('Content-Type', 'application/json');
+      
+      this.http.put(this.apiUrl, reviewModel, { headers })
+        .subscribe({
+          next: (response) => {
+            console.log('Review updated successfully:', response);
+            this.loading = false;
+            this.successMessage = "Review updated successfully!";
+            this.reviewSubmitted.emit(response);
+          },
+          error: (error) => {
+            this.handleError(error);
           }
-        }
-      });
+        });
     } else {
-      // Creating new review
-      const newReview: Review = {
-        reviewId: 0, // Will be set by server
+      // Create new review with navigation properties
+      const reviewModel = {
         userId: this.currentUserId,
         restaurantId: this.restaurantId,
-        rating: Number(this.f['rating'].value), // Ensure it's a number
-        comment: this.f['comment'].value || "", // Ensure not null
-        createdAt: new Date() // Use current date
+        rating: rating,
+        comment: this.f['comment'].value || "",
+        // Include navigation properties that the backend requires
+        User: { userId: this.currentUserId },
+        Restaurant: { restaurantId: this.restaurantId }
       };
-
-      console.log('Creating new review:', newReview);
-      console.log('User ID:', this.currentUserId);
-      console.log('Restaurant ID:', this.restaurantId);
       
-      this.reviewService.createReview(newReview).subscribe({
-        next: (review) => {
-          console.log('Review created successfully:', review);
-          this.loading = false;
-          this.reviewSubmitted.emit(review);
-        },
-        error: (error) => {
-          console.error('Error creating review:', error);
-          this.loading = false;
-          
-          if (error.status === 409) {
-            this.error = 'You have already reviewed this restaurant.';
-          } else if (error.status === 400) {
-            this.error = 'Invalid review data. Please check your input.';
-          } else if (error.status === 404) {
-            this.error = 'Restaurant or user not found.';
-          } else {
-            this.error = 'Failed to submit review. Please try again.';
+      console.log('Submitting new review with payload:', JSON.stringify(reviewModel));
+      
+      // Explicitly set content-type for ASP.NET Core
+      const headers = new HttpHeaders()
+        .set('Content-Type', 'application/json');
+      
+      this.http.post(this.apiUrl, reviewModel, { headers })
+        .subscribe({
+          next: (response) => {
+            console.log('Review created successfully:', response);
+            this.loading = false;
+            this.successMessage = "Review submitted successfully!";
+            this.reviewSubmitted.emit(response);
+          },
+          error: (error) => {
+            this.handleError(error);
           }
+        });
+    }
+  }
+  
+  handleError(error: any): void {
+    this.loading = false;
+    
+    if (error.status === 409) {
+      this.error = 'You have already reviewed this restaurant.';
+    } else if (error.status === 400) {
+      this.error = 'Invalid review data. Please check your input.';
+      
+      if (error.error) {
+        console.error('Error response detail:', error.error);
+        
+        // Try to extract validation errors from ASP.NET Core response
+        if (error.error.errors) {
+          let validationErrors = '';
+          for (const key in error.error.errors) {
+            if (error.error.errors.hasOwnProperty(key)) {
+              validationErrors += `${key}: ${error.error.errors[key].join(', ')}; `;
+            }
+          }
+          if (validationErrors) {
+            this.error += ` - ${validationErrors}`;
+          }
+        } else if (typeof error.error === 'string') {
+          this.error += ` - ${error.error}`;
         }
-      });
+      }
+      
+      console.error('Full error object:', error);
+    } else if (error.status === 404) {
+      this.error = 'Restaurant or user not found.';
+    } else {
+      this.error = `Error ${error.status}: ${error.statusText || 'Unknown error'}`;
+      console.error('Full error object:', error);
     }
   }
   

@@ -1,35 +1,38 @@
 <div class="container">
-    <div class="jumbotron bg-light p-5 rounded">
-      <h1 class="display-4">Copenhagen Restaurant Explorer</h1>
-      <p class="lead">Discover the best restaurants in Copenhagen</p>
-      <hr class="my-4">
-      <p>Browse restaurants, read reviews, and find your new favorite spot.</p>
-      <div class="mt-4">
-        <a routerLink="/restaurants" class="btn btn-primary btn-lg me-2">Browse Restaurants</a>
-        <a *ngIf="!isLoggedIn" routerLink="/auth" class="btn btn-outline-secondary btn-lg">Sign In</a>
-      </div>
+  <div class="hero-section">
+    <h1 class="hero-title">Copenhagen Restaurant Explorer</h1>
+    <p class="hero-subtitle">Discover the best restaurants in Copenhagen</p>
+    <p class="hero-description">Browse restaurants, read reviews, and find your new favorite spot.</p>
+    <div class="hero-actions">
+      <a mat-raised-button color="primary" routerLink="/restaurants" class="mr-2">
+        <mat-icon>restaurant_menu</mat-icon> Browse Restaurants
+      </a>
+      <a *ngIf="!isLoggedIn" mat-stroked-button routerLink="/auth">
+        <mat-icon>login</mat-icon> Sign In
+      </a>
+    </div>
+  </div>
+
+  <div class="content-section">
+    <h2 class="section-title">Featured Restaurants</h2>
+    <mat-divider></mat-divider>
+  
+    <div *ngIf="loading" class="loading-spinner">
+      <mat-spinner diameter="40"></mat-spinner>
     </div>
   
-    <div class="row mt-5">
-      <div class="col-12">
-        <h2>Featured Restaurants</h2>
-        <hr>
-      </div>
+    <div *ngIf="error" class="error-message">
+      <mat-card>
+        <mat-card-content>
+          <mat-icon color="warn">error</mat-icon> {{ error }}
+        </mat-card-content>
+      </mat-card>
     </div>
   
-    <div *ngIf="loading" class="text-center my-5">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-  
-    <div *ngIf="error" class="alert alert-danger mt-3">
-      {{ error }}
-    </div>
-  
-    <div class="row">
-      <div *ngFor="let restaurant of featuredRestaurants" class="col-md-4 mb-4">
+    <div class="restaurant-grid">
+      <div *ngFor="let restaurant of featuredRestaurants" class="restaurant-item">
         <app-restaurant-card [restaurant]="restaurant"></app-restaurant-card>
       </div>
     </div>
   </div>
+</div>

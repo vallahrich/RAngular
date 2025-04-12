@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Restaurant } from '../../../models/restaurant.model';
 import { BookmarkService } from '../../../services/bookmark.service';
+import { ConfirmationDialogComponent } from '../../../shared/dialogs/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-bookmarks-section',
@@ -14,7 +16,10 @@ export class BookmarksSectionComponent implements OnInit {
   bookmarkedRestaurants: Restaurant[] = [];
   loading = true;
   
-  constructor(private bookmarkService: BookmarkService) {}
+  constructor(
+    private bookmarkService: BookmarkService,
+    private dialog: MatDialog
+  ) {}
   
   ngOnInit(): void {
     this.loadBookmarkedRestaurants();
@@ -36,19 +41,35 @@ export class BookmarksSectionComponent implements OnInit {
   }
   
   removeBookmark(restaurantId: number): void {
-    if (confirm('Are you sure you want to remove this bookmark?')) {
-      this.bookmarkService.removeBookmark(this.userId, restaurantId).subscribe({
-        next: () => {
-          this.bookmarkedRestaurants = this.bookmarkedRestaurants.filter(
-            r => r.restaurantId !== restaurantId
-          );
-        },
-        error: (err) => {
-          this.error.emit('Failed to remove bookmark. Please try again.');
-          console.error('Error removing bookmark:', err);
-        }
-      });
-    }
+    const restaurant = this.bookmarkedRestaurants.find(r => r.restaurantId === restaurantId);
+    
+    if (!restaurant) return;
+    
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px',
+      data: {
+        title: 'Remove Bookmark',
+        message: `Are you sure you want to remove "${restaurant.name}" from your bookmarks?`,
+        confirmText: 'Remove',
+        confirmColor: 'warn'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.bookmarkService.removeBookmark(this.userId, restaurantId).subscribe({
+          next: () => {
+            this.bookmarkedRestaurants = this.bookmarkedRestaurants.filter(
+              r => r.restaurantId !== restaurantId
+            );
+          },
+          error: (err) => {
+            this.error.emit('Failed to remove bookmark. Please try again.');
+            console.error('Error removing bookmark:', err);
+          }
+        });
+      }
+    });
   }
   
   getPriceRange(priceRange: string): string {
