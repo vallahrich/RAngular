@@ -24,14 +24,15 @@ export class UserService {
   }
 
   updatePassword(userId: number, oldPassword: string, newPassword: string): Observable<any> {
-    // In a real app, you should hash the passwords before sending
     const request = {
       UserId: userId,
       OldPasswordHash: oldPassword,
       NewPasswordHash: newPassword
     };
     
-    return this.http.put<any>(`${this.apiUrl}/password`, request);
+    return this.http.put<any>(`${this.apiUrl}/password`, request, {
+      responseType: 'text' as 'json' // Tell Angular to expect a text response
+    });
   }
 
   deleteUser(id: number): Observable<any> {

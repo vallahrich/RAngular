@@ -1,5 +1,6 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Output, ViewChild, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
@@ -9,59 +10,52 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class RegisterComponent implements OnInit {
   @Output() registered = new EventEmitter<boolean>();
+  @ViewChild('registerForm') registerForm!: NgForm;
   
-  registerForm!: FormGroup;
+  // Model for two-way binding
+  registerModel = {
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  };
+  
   loading = false;
-  submitted = false;
   error = '';
   success = '';
   hidePassword = true;
   hideConfirmPassword = true;
-
-  constructor(
-    private formBuilder: FormBuilder,
-    private authService: AuthService
-  ) { }
-
+  passwordsNotMatching = false;
+  
+  constructor(private authService: AuthService) { }
+  
   ngOnInit(): void {
-    this.registerForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
-    }, {
-      validator: this.passwordMatchValidator
-    });
+    // Initialize if needed
   }
-
-  // Custom validator for password matching
-  passwordMatchValidator(g: FormGroup) {
-    const password = g.get('password')?.value;
-    const confirmPassword = g.get('confirmPassword')?.value;
-    
-    if (password !== confirmPassword) {
-      g.get('confirmPassword')?.setErrors({ 'matching': true });
+  
+  checkPasswordMatch(): void {
+    this.passwordsNotMatching = 
+      this.registerModel.password !== this.registerModel.confirmPassword &&
+      this.registerModel.confirmPassword.length > 0;
+  }
+  
+  onSubmit(): void {
+    // Check if form is available and valid
+    if (!this.registerForm || !this.registerForm.valid) {
+      return;
     }
     
-    return null;
-  }
-
-  // Convenience getter for form fields
-  get f() { return this.registerForm.controls; }
-
-  onSubmit(): void {
-    this.submitted = true;
-
-    // Stop if form is invalid
-    if (this.registerForm.invalid) {
+    // Check password match manually
+    if (this.registerModel.password !== this.registerModel.confirmPassword) {
+      this.passwordsNotMatching = true;
       return;
     }
 
     this.loading = true;
     this.authService.register(
-      this.f['username'].value,
-      this.f['email'].value,
-      this.f['password'].value
+      this.registerModel.username,
+      this.registerModel.email,
+      this.registerModel.password
     ).subscribe({
       next: () => {
         this.loading = false;
@@ -73,7 +67,7 @@ export class RegisterComponent implements OnInit {
           this.registered.emit(true);
         }, 1500);
       },
-      error: error => {
+      error: (error: HttpErrorResponse) => {
         if (error.status === 409) {
           this.error = 'Username or email already exists.';
         } else {

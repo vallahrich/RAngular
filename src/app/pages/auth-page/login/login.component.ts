@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, ViewChild, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
@@ -10,51 +11,45 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class LoginComponent implements OnInit {
   @Input() returnUrl: string | null = '/';
+  @ViewChild('loginForm') loginForm!: NgForm;
   
-  loginForm!: FormGroup;
+  // Model for two-way binding
+  loginModel = {
+    username: '',
+    password: ''
+  };
+  
   loading = false;
-  submitted = false;
   error = '';
   hidePassword = true;
-
+  
   constructor(
-    private formBuilder: FormBuilder,
     private router: Router,
     private authService: AuthService
-  ) { 
+  ) { }
+  
+  ngOnInit(): void {
     // Redirect if already logged in
     if (this.authService.currentUserValue) { 
       this.router.navigate(['/']);
     }
   }
-
-  ngOnInit(): void {
-    this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
-    });
-  }
-
-  // Convenience getter for form fields
-  get f() { return this.loginForm.controls; }
-
+  
   onSubmit(): void {
-    this.submitted = true;
-
-    // Stop if form is invalid
-    if (this.loginForm.invalid) {
+    // Check if form is available and valid
+    if (!this.loginForm || !this.loginForm.valid) {
       return;
     }
 
     this.loading = true;
     this.authService.login(
-      this.f['username'].value,
-      this.f['password'].value
+      this.loginModel.username,
+      this.loginModel.password
     ).subscribe({
       next: () => {
         this.router.navigate([this.returnUrl || '/']);
       },
-      error: error => {
+      error: (error: HttpErrorResponse) => {
         this.error = error.status === 401 
           ? 'Invalid username or password' 
           : 'Login failed. Please try again.';

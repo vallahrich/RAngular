@@ -1,22 +1,28 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+<form #loginForm="ngForm" (ngSubmit)="onSubmit()" class="login-form">
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Username</mat-label>
-    <input matInput formControlName="username" required>
+    <input matInput [(ngModel)]="loginModel.username" name="username" required #username="ngModel">
     <mat-icon matSuffix>person</mat-icon>
-    <mat-error *ngIf="f['username'].errors?.['required']">Username is required</mat-error>
+    <mat-error *ngIf="username.errors?.['required'] && (username.dirty || username.touched)">
+      Username is required
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Password</mat-label>
-    <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" required>
+    <input matInput [(ngModel)]="loginModel.password" name="password" 
+           [type]="hidePassword ? 'password' : 'text'" required #password="ngModel">
     <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
       <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
-    <mat-error *ngIf="f['password'].errors?.['required']">Password is required</mat-error>
+    <mat-error *ngIf="password.errors?.['required'] && (password.dirty || password.touched)">
+      Password is required
+    </mat-error>
   </mat-form-field>
 
   <div class="form-actions">
-    <button mat-raised-button color="primary" type="submit" [disabled]="loading" class="submit-button">
+    <button mat-raised-button color="primary" type="submit" 
+            [disabled]="loading || loginForm.invalid" class="submit-button">
       <mat-spinner *ngIf="loading" diameter="20" class="spinner-margin"></mat-spinner>
       <span *ngIf="!loading">Login</span>
     </button>

@@ -2,39 +2,42 @@
   <mat-card-header>
     <mat-card-title>{{ isEditing ? 'Edit Your Review' : 'Add Your Review' }}</mat-card-title>
   </mat-card-header>
-  
+
   <mat-card-content>
-    <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
+    <form #reviewForm="ngForm" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Rating</mat-label>
-        <mat-select formControlName="rating" required>
-          <mat-option value="1">1 - Poor</mat-option>
-          <mat-option value="2">2 - Fair</mat-option>
-          <mat-option value="3">3 - Good</mat-option>
-          <mat-option value="4">4 - Very Good</mat-option>
-          <mat-option value="5">5 - Excellent</mat-option>
+        <mat-select [(ngModel)]="reviewModel.rating" name="rating" required #rating="ngModel">
+          <mat-option [value]="1">1 - Poor</mat-option>
+          <mat-option [value]="2">2 - Fair</mat-option>
+          <mat-option [value]="3">3 - Good</mat-option>
+          <mat-option [value]="4">4 - Very Good</mat-option>
+          <mat-option [value]="5">5 - Excellent</mat-option>
         </mat-select>
-        <mat-error *ngIf="submitted && f['rating'].errors?.['required']">Rating is required</mat-error>
+        <mat-error *ngIf="rating.invalid && (rating.dirty || rating.touched)">
+          Rating is required
+        </mat-error>
       </mat-form-field>
-      
+
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Your Comments</mat-label>
-        <textarea matInput formControlName="comment" rows="4" 
+        <textarea matInput [(ngModel)]="reviewModel.comment" name="comment" rows="4" maxlength="1000" #comment="ngModel"
           placeholder="Share your experience at this restaurant..."></textarea>
-        <mat-error *ngIf="submitted && f['comment'].errors?.['maxlength']">
+        <mat-hint align="end">{{reviewModel.comment.length || 0}}/1000</mat-hint>
+        <mat-error *ngIf="comment.errors?.['maxlength']">
           Comment cannot exceed 1000 characters
         </mat-error>
       </mat-form-field>
-      
+
       <div class="review-form-actions">
-        <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+        <button mat-raised-button color="primary" type="submit" [disabled]="loading || reviewForm.invalid">
           <mat-spinner *ngIf="loading" diameter="20" class="spinner-margin"></mat-spinner>
           <span *ngIf="!loading">{{ isEditing ? 'Update Review' : 'Submit Review' }}</span>
         </button>
         <button mat-button type="button" (click)="onCancel()">Cancel</button>
       </div>
     </form>
-    
+
     <mat-error *ngIf="error" class="error-message">
       <mat-icon>error</mat-icon> {{ error }}
     </mat-error>
