@@ -33,6 +33,10 @@ export class LoginComponent implements OnInit {
     if (this.authService.currentUserValue) { 
       this.router.navigate(['/']);
     }
+    
+    // Pre-populate with standard credentials from Lecture 9
+    this.loginModel.username = 'john.doe';
+    this.loginModel.password = 'VerySecret!';
   }
   
   onSubmit(): void {
@@ -42,6 +46,8 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
+    
+    // Note: The AuthService now handles the Basic Authentication header creation
     this.authService.login(
       this.loginModel.username,
       this.loginModel.password

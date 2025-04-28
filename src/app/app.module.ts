@@ -1,12 +1,15 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'; // Add HTTP_INTERCEPTORS
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { MaterialModule } from './material.module';
 import { AppComponent } from './app.component';
+
+// Add auth interceptor import
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 // Shared Components
 import { HeaderComponent } from './shared/header/header.component';
@@ -65,7 +68,7 @@ import { UserService } from './services/user.service';
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule, // Using this for animations
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
@@ -73,13 +76,18 @@ import { UserService } from './services/user.service';
     MaterialModule
   ],
   providers: [
+    // Register the interceptor
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
     AuthService,
     RestaurantService,
     ReviewService,
     BookmarkService,
     UserService
-    // Removed provideAnimationsAsync() since we're using BrowserAnimationsModule instead
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { } // This line was missing
+export class AppModule { }
