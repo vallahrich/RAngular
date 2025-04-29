@@ -69,9 +69,18 @@ export class ReviewSectionComponent implements OnInit {
     this.showReviewForm = false;
   }
   
-  onReviewDeleted(): void {
-    this.userReview = null;
-    this.loadReviews();
+  onReviewDeleted(review: Review): void {
+    this.reviewService.deleteReview(review.userId, review.restaurantId).subscribe({
+      next: () => {
+        // Only update UI after successful deletion
+        this.userReview = null;
+        this.loadReviews();
+      },
+      error: (error) => {
+        console.error('Error deleting review:', error);
+        this.error = 'Failed to delete review. Please try again.';
+      }
+    });
   }
   
   onEditReview(): void {

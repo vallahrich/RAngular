@@ -20,7 +20,7 @@
         </mat-card-header>
         <mat-card-content>
           <app-review-item [review]="userReview" [isOwnReview]="true" (editReview)="onEditReview()"
-            (deleteReview)="onReviewDeleted()">
+            (deleteReview)="onReviewDeleted($event)">
           </app-review-item>
         </mat-card-content>
       </mat-card>
@@ -57,7 +57,7 @@
     <h3 class="reviews-count">All Reviews ({{ reviews.length }})</h3>
     <div *ngFor="let review of reviews">
       <app-review-item [review]="review" [isOwnReview]="isUserReview(review)" (editReview)="onEditReview()"
-        (deleteReview)="onReviewDeleted()">
+        (deleteReview)="onReviewDeleted($event)">
       </app-review-item>
     </div>
   </div>
