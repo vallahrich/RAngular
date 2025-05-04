@@ -22,5 +22,7 @@ const routes: Routes = [
 ];
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideHttpClient()]
+  providers: [
+    provideRouter(routes), 
+    provideHttpClient()]
 };

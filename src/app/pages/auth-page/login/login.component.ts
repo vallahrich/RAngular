@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 
@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
   
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private authService: AuthService
   ) { }
   
@@ -33,6 +34,13 @@ export class LoginComponent implements OnInit {
     if (this.authService.currentUserValue) { 
       this.router.navigate(['/']);
     }
+    
+    // Check if redirected due to unauthorized access
+    this.route.queryParams.subscribe(params => {
+      if (params['unauthorized']) {
+        this.error = 'Session expired or unauthorized access. Please login again.';
+      }
+    });
     
     // Pre-populate with standard credentials from Lecture 9
     this.loginModel.username = 'john.doe';
@@ -46,8 +54,8 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
+    this.error = '';
     
-    // Note: The AuthService now handles the Basic Authentication header creation
     this.authService.login(
       this.loginModel.username,
       this.loginModel.password

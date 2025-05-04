@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'; // Add HTTP_INTERCEPTORS
+import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -9,7 +9,7 @@ import { MaterialModule } from './material.module';
 import { AppComponent } from './app.component';
 
 // Add auth interceptor import
-import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { authInterceptor } from './interceptors/auth.interceptor';
 
 // Shared Components
 import { HeaderComponent } from './shared/header/header.component';
@@ -76,12 +76,9 @@ import { UserService } from './services/user.service';
     MaterialModule
   ],
   providers: [
-    // Register the interceptor
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    },
+    provideHttpClient(
+      withInterceptors([authInterceptor])
+    ),
     AuthService,
     RestaurantService,
     ReviewService,

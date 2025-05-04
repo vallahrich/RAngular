@@ -22,27 +22,8 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  /**
-   * Returns the Authorization header value for Basic Authentication
-   * Format: "Basic <base64-encoded-username-password>"
-   */
   public get authHeader(): string {
-    // If no user is logged in, return empty string
-    if (!this.currentUserValue) {
-      return '';
-    }
-
-    // Otherwise, create the Basic Authentication header
-    // Format is "username:password" encoded in base64
-    const username = this.currentUserValue.username;
-    const password = this.currentUserValue.passwordHash; // In real app, we wouldn't store passwords
-    
-    // Encode the credentials in base64
-    const credentials = `${username}:${password}`;
-    const base64Credentials = btoa(credentials);
-    
-    // Return the full header value
-    return `Basic ${base64Credentials}`;
+    return localStorage.getItem('authHeader') || '';
   }
 
   private getUserFromStorage(): User | null {
@@ -50,45 +31,41 @@ export class AuthService {
     return storedUser ? JSON.parse(storedUser) : null;
   }
 
-  login(username: string, password: string): Observable<User> {
-    // Create headers with Basic Authentication for the login request
+  private createBasicAuthHeader(username: string, password: string): string {
     const credentials = `${username}:${password}`;
     const base64Credentials = btoa(credentials);
-    const headers = new HttpHeaders({
-      'Authorization': `Basic ${base64Credentials}`
-    });
+    return `Basic ${base64Credentials}`;
+  }
 
+  login(username: string, password: string): Observable<User> {
+    // Create Basic Auth header for future requests
+    const authHeader = this.createBasicAuthHeader(username, password);
+    
     // Use the [AllowAnonymous] endpoint to authenticate
     return this.http.post<User>(`${this.apiUrl}/login`, 
-      { username, passwordHash: password },
-      { headers }
+      { username, passwordHash: password }
     ).pipe(
       tap(user => {
-        // Store user details in local storage
+        // Store user details and auth header in local storage
         localStorage.setItem('currentUser', JSON.stringify(user));
+        localStorage.setItem('authHeader', authHeader);
         this.currentUserSubject.next(user);
       })
     );
   }
 
   register(username: string, email: string, password: string): Observable<User> {
-    // For registration, we also need to use Basic Authentication
-    const credentials = `${username}:${password}`;
-    const base64Credentials = btoa(credentials);
-    const headers = new HttpHeaders({
-      'Authorization': `Basic ${base64Credentials}`
-    });
-
     return this.http.post<User>(`${this.apiUrl}/register`, {
       username,
       email,
       passwordHash: password
-    }, { headers });
+    });
   }
 
   logout(): void {
-    // Remove user from local storage and set current user to null
+    // Remove user and auth header from local storage
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('authHeader');
     this.currentUserSubject.next(null);
   }
 
