@@ -38,12 +38,17 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<User> {
-    // Create Basic Auth header for future requests
+    // Create Basic Auth header for all future requests
     const authHeader = this.createBasicAuthHeader(username, password);
     
-    // Use the [AllowAnonymous] endpoint to authenticate
-    return this.http.post<User>(`${this.apiUrl}/login`, 
-      { username, passwordHash: password }
+    // Make login request with the auth header
+    const headers = new HttpHeaders({
+      'Authorization': authHeader
+    });
+
+    return this.http.post<any>(`${this.apiUrl}/login`, 
+      { username, passwordHash: password },
+      { headers }
     ).pipe(
       tap(user => {
         // Store user details and auth header in local storage
