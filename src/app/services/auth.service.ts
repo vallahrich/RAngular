@@ -31,30 +31,19 @@ export class AuthService {
     return storedUser ? JSON.parse(storedUser) : null;
   }
 
-  private createBasicAuthHeader(username: string, password: string): string {
-    const credentials = `${username}:${password}`;
-    const base64Credentials = btoa(credentials);
-    return `Basic ${base64Credentials}`;
-  }
-
   login(username: string, password: string): Observable<User> {
-    // Create Basic Auth header for all future requests
-    const authHeader = this.createBasicAuthHeader(username, password);
-    
-    // Make login request with the auth header
-    const headers = new HttpHeaders({
-      'Authorization': authHeader
-    });
-
-    return this.http.post<any>(`${this.apiUrl}/login`, 
-      { username, passwordHash: password },
-      { headers }
+    // Make login request with credentials
+    return this.http.post<{user: User, headerValue: string}>(`${this.apiUrl}/login`, 
+      { username, passwordHash: password }
     ).pipe(
-      tap(user => {
+      map(response => {
         // Store user details and auth header in local storage
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        localStorage.setItem('authHeader', authHeader);
-        this.currentUserSubject.next(user);
+        localStorage.setItem('currentUser', JSON.stringify(response.user));
+        localStorage.setItem('authHeader', response.headerValue);
+        this.currentUserSubject.next(response.user);
+        
+        // Return just the user object to maintain the same API
+        return response.user;
       })
     );
   }
