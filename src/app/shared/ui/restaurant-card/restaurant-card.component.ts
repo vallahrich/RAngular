@@ -1,3 +1,15 @@
+/**
+ * Restaurant Card Component
+ *
+ * Reusable presentational component that displays restaurant information in a card format.
+ *
+ * Key features:
+ * - Consistent display of restaurant details (name, cuisine, price range, etc.)
+ * - Link to detailed restaurant page
+ * - Price range formatting with currency symbols
+ * - Conditional rendering of optional restaurant information
+ * - Material design styling with hover effects
+ */
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';

@@ -1,3 +1,14 @@
+/**
+ * Restaurant Info Component
+ *
+ * Presentational component that displays detailed restaurant information.
+ *
+ * Key features:
+ * - Organized display of restaurant attributes (address, neighborhood, cuisine, etc.)
+ * - Visual indicators for important information using icons
+ * - Formatting functions for readable display of data like price range
+ * - Clean, card-based layout with consistent styling
+ */
 import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';

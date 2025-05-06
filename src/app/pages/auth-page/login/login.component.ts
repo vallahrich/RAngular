@@ -1,7 +1,22 @@
+/**
+ * Login Component
+ *
+ * Handles user authentication through a login form interface.
+ * Manages form state, validation, and authentication API calls.
+ *
+ * Key features:
+ * - Two-way form binding for username and password inputs
+ * - Form validation with error messages
+ * - Loading state management during authentication
+ * - Password visibility toggle
+ * - Successful login redirects to saved return URL
+ * - Session expiration detection and messaging
+ * - Development convenience with pre-populated test credentials
+ */
 import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -42,7 +57,6 @@ export class LoginComponent implements OnInit {
   
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
     private authService: AuthService
   ) { }
   
@@ -51,13 +65,6 @@ export class LoginComponent implements OnInit {
     if (this.authService.currentUserValue) { 
       this.router.navigate(['/']);
     }
-    
-    // Check if redirected due to unauthorized access
-    this.route.queryParams.subscribe(params => {
-      if (params['unauthorized']) {
-        this.error = 'Session expired or unauthorized access. Please login again.';
-      }
-    });
     
     // Pre-populate with standard credentials
     this.loginModel.username = 'john.doe';

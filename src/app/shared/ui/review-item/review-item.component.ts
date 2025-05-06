@@ -1,3 +1,16 @@
+/**
+ * Review Item Component
+ *
+ * Presentational component that displays a single restaurant review.
+ *
+ * Key features:
+ * - Shows reviewer username and creation date
+ * - Displays star rating with visual representation
+ * - Shows review comment text
+ * - Edit/delete options for user's own reviews
+ * - Confirmation dialog before review deletion
+ * - Event emission for edit/delete actions
+ */
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';

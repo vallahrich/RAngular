@@ -1,3 +1,18 @@
+/**
+ * Home Page Component
+ *
+ * Main landing page component that showcases the application's purpose
+ * and displays featured restaurants to encourage exploration.
+ *
+ * Key features:
+ * - Hero section with call-to-action buttons
+ * - Featured restaurants display (limited to 6)
+ * - Conditional UI elements based on authentication state
+ * - Loading state management while fetching restaurant data
+ * - Error handling for API failures
+ * - Responsive layout for various screen sizes
+ */
+
 import { Component, OnInit } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { RouterLink } from '@angular/router';

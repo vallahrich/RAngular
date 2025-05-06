@@ -1,3 +1,17 @@
+/**
+ * Header Component
+ *
+ * Provides the application's main navigation header.
+ *
+ * Key features:
+ * - Responsive navigation links to main application routes
+ * - Conditional rendering based on authentication state
+ * - User menu dropdown for authenticated users
+ * - Active route highlighting
+ * - Logout functionality
+ * - Subscription to auth state changes for dynamic updates
+ */
+
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';

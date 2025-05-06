@@ -1,3 +1,17 @@
+/**
+ * Review Form Component
+ *
+ * Provides form interface for creating or editing restaurant reviews.
+ *
+ * Key features:
+ * - Dual mode for creating new or editing existing reviews
+ * - Star rating selection
+ * - Comment field with character limit
+ * - Form validation with error messaging
+ * - Loading state management during submission
+ * - Error handling for API failures with specific messaging
+ * - Event emission for form submission or cancellation
+ */
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';

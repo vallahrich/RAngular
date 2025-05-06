@@ -1,3 +1,16 @@
+/**
+ * Bookmarks Section Component
+ *
+ * Manages and displays a user's bookmarked restaurants within the profile page.
+ *
+ * Key features:
+ * - Retrieves user's bookmarked restaurants
+ * - Displays bookmarks in a responsive grid layout
+ * - Provides functionality to remove bookmarks with confirmation
+ * - Handles empty state with appropriate messaging
+ * - Loading state management
+ * - Error handling with event emission to parent component
+ */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { RouterLink } from '@angular/router';

@@ -1,3 +1,17 @@
+/**
+ * Filter Bar Component
+ *
+ * Provides filtering controls for restaurant listings.
+ *
+ * Key features:
+ * - Form with multiple filter criteria (neighborhood, cuisine, price, dietary)
+ * - Pre-populated filter options
+ * - Reactive form implementation
+ * - Clear filters functionality
+ * - Event emission of filter criteria to parent component
+ * - Responsive layout for various screen sizes
+ */
+
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { NgFor } from '@angular/common';

@@ -1,3 +1,17 @@
+/**
+ * Profile Info Component
+ *
+ * Manages display and editing of user profile information.
+ *
+ * Key features:
+ * - Displays user details (username, email, join date)
+ * - Toggles between view and edit modes
+ * - Form validation for profile updates
+ * - Loading state management during API operations
+ * - Account deletion functionality with confirmation dialog
+ * - Event emission for operation results
+ * - Handles API errors with appropriate messaging
+ */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgIf, DatePipe } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';

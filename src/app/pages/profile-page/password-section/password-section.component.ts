@@ -1,3 +1,16 @@
+/**
+ * Password Section Component
+ *
+ * Handles password change functionality within the user profile page.
+ *
+ * Key features:
+ * - Form for entering current and new password
+ * - Password validation and matching confirmation
+ * - Password visibility toggles for all fields
+ * - Security verification of current password before update
+ * - Form state management during submission
+ * - Success/error event emission to parent component
+ */
 import { Component, EventEmitter, Input, Output, ViewChild, OnInit } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';

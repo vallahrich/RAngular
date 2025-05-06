@@ -1,3 +1,18 @@
+/**
+ * Register Component
+ *
+ * Manages new user registration through a form interface.
+ * Handles form state, validation, and registration API calls.
+ *
+ * Key features:
+ * - Input validation for username, email, and password
+ * - Password strength requirements enforcement
+ * - Password confirmation matching validation
+ * - Loading state management during registration
+ * - Success/failure messaging
+ * - Automatically redirects to login view after successful registration
+ * - Emits completion event to parent component for tab switching
+ */
 import { Component, EventEmitter, Output, ViewChild, OnInit } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';

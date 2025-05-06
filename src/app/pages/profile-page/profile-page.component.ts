@@ -1,3 +1,17 @@
+/**
+ * Profile Page Component
+ *
+ * Container component for the user profile area that manages different
+ * sections of user-related functionality.
+ *
+ * Key features:
+ * - Fetches and displays current user data
+ * - Manages profile sections (personal info, password, bookmarks)
+ * - Coordinates communication between child components
+ * - Handles success/error messaging for all profile operations
+ * - Protected by authentication guard
+ * - Auto-dismissing notifications for user feedback
+ */
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';

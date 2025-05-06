@@ -1,3 +1,17 @@
+/**
+ * Review Section Component
+ *
+ * Manages the reviews area within restaurant detail pages.
+ *
+ * Key features:
+ * - Fetches reviews for specific restaurant
+ * - Shows user's own review separately if exists
+ * - Provides interface to add, edit, or delete reviews
+ * - Conditionally renders review form based on user actions
+ * - Handles authentication state to control available actions
+ * - Loading state management and error handling
+ * - Reviews count and empty state handling
+ */
 import { Component, Input, OnInit } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { MatDividerModule } from '@angular/material/divider';

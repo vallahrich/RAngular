@@ -1,3 +1,16 @@
+/**
+ * Confirmation Dialog Component
+ *
+ * Reusable dialog component for confirming user actions.
+ *
+ * Key features:
+ * - Customizable title and message
+ * - Configurable button text and colors
+ * - Standardized dialog layout
+ * - Returns boolean result based on user selection
+ * - Used throughout the application for destructive operations
+ */
+
 import { Component, Inject } from '@angular/core';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
