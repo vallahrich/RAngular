@@ -3,9 +3,9 @@
     <mat-label>Username</mat-label>
     <input matInput [(ngModel)]="loginModel.username" name="username" required #username="ngModel">
     <mat-icon matSuffix>person</mat-icon>
-    <mat-error *ngIf="username.errors?.['required'] && (username.dirty || username.touched)">
-      Username is required
-    </mat-error>
+    @if (username.errors?.['required'] && (username.dirty || username.touched)) {
+      <mat-error>Username is required</mat-error>
+    }
   </mat-form-field>
 
   <mat-form-field class="full-width" appearance="outline">
@@ -15,18 +15,23 @@
     <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
       <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
-    <mat-error *ngIf="password.errors?.['required'] && (password.dirty || password.touched)">
-      Password is required
-    </mat-error>
+    @if (password.errors?.['required'] && (password.dirty || password.touched)) {
+      <mat-error>Password is required</mat-error>
+    }
   </mat-form-field>
 
   <div class="form-actions">
     <button mat-raised-button color="primary" type="submit" 
             [disabled]="loading || loginForm.invalid" class="submit-button">
-      <mat-spinner *ngIf="loading" diameter="20" class="spinner-margin"></mat-spinner>
-      <span *ngIf="!loading">Login</span>
+      @if (loading) {
+        <mat-spinner diameter="20" class="spinner-margin"></mat-spinner>
+      } @else {
+        <span>Login</span>
+      }
     </button>
   </div>
 
-  <mat-error *ngIf="error" class="error-message">{{error}}</mat-error>
+  @if (error) {
+    <mat-error class="error-message">{{error}}</mat-error>
+  }
 </form>

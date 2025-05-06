@@ -3,10 +3,14 @@
         <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center" [selectedIndex]="showLogin ? 0 : 1"
             (selectedIndexChange)="tabChanged($event)">
             <mat-tab label="Login">
-                <app-login *ngIf="showLogin" [returnUrl]="returnUrl"></app-login>
+                @if (showLogin) {
+                    <app-login [returnUrl]="returnUrl"></app-login>
+                }
             </mat-tab>
             <mat-tab label="Register">
-                <app-register *ngIf="!showLogin" (registered)="showLogin = true"></app-register>
+                @if (!showLogin) {
+                    <app-register (registered)="showLogin = true"></app-register>
+                }
             </mat-tab>
         </mat-tab-group>
     </mat-card>

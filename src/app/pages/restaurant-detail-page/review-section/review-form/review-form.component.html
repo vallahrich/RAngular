@@ -14,9 +14,9 @@
           <mat-option [value]="4">4 - Very Good</mat-option>
           <mat-option [value]="5">5 - Excellent</mat-option>
         </mat-select>
-        <mat-error *ngIf="rating.invalid && (rating.dirty || rating.touched)">
-          Rating is required
-        </mat-error>
+        @if (rating.invalid && (rating.dirty || rating.touched)) {
+          <mat-error>Rating is required</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
@@ -24,22 +24,27 @@
         <textarea matInput [(ngModel)]="reviewModel.comment" name="comment" rows="4" maxlength="1000" #comment="ngModel"
           placeholder="Share your experience at this restaurant..."></textarea>
         <mat-hint align="end">{{reviewModel.comment.length || 0}}/1000</mat-hint>
-        <mat-error *ngIf="comment.errors?.['maxlength']">
-          Comment cannot exceed 1000 characters
-        </mat-error>
+        @if (comment.errors?.['maxlength']) {
+          <mat-error>Comment cannot exceed 1000 characters</mat-error>
+        }
       </mat-form-field>
 
       <div class="review-form-actions">
         <button mat-raised-button color="primary" type="submit" [disabled]="loading || reviewForm.invalid">
-          <mat-spinner *ngIf="loading" diameter="20" class="spinner-margin"></mat-spinner>
-          <span *ngIf="!loading">{{ isEditing ? 'Update Review' : 'Submit Review' }}</span>
+          @if (loading) {
+            <mat-spinner diameter="20" class="spinner-margin"></mat-spinner>
+          } @else {
+            <span>{{ isEditing ? 'Update Review' : 'Submit Review' }}</span>
+          }
         </button>
         <button mat-button type="button" (click)="onCancel()">Cancel</button>
       </div>
     </form>
 
-    <mat-error *ngIf="error" class="error-message">
-      <mat-icon>error</mat-icon> {{ error }}
-    </mat-error>
+    @if (error) {
+      <mat-error class="error-message">
+        <mat-icon>error</mat-icon> {{ error }}
+      </mat-error>
+    }
   </mat-card-content>
 </mat-card>

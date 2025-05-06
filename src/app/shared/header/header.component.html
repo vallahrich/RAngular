@@ -11,13 +11,11 @@
       <mat-icon>restaurant</mat-icon> Restaurants
     </a>
     
-    <ng-container *ngIf="!isLoggedIn">
+    @if (!isLoggedIn) {
       <a mat-button routerLink="/auth" routerLinkActive="active-link">
         <mat-icon>login</mat-icon> Sign In
       </a>
-    </ng-container>
-    
-    <ng-container *ngIf="isLoggedIn">
+    } @else {
       <button mat-button [matMenuTriggerFor]="userMenu">
         <mat-icon>account_circle</mat-icon>
         {{ currentUser?.username }}
@@ -30,6 +28,6 @@
           <mat-icon>exit_to_app</mat-icon> Logout
         </button>
       </mat-menu>
-    </ng-container>
+    }
   </div>
 </mat-toolbar>

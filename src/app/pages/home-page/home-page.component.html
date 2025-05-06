@@ -7,9 +7,11 @@
       <a mat-raised-button color="primary" routerLink="/restaurants" class="mr-2">
         <mat-icon>restaurant_menu</mat-icon> Browse Restaurants
       </a>
-      <a *ngIf="!isLoggedIn" mat-stroked-button routerLink="/auth">
-        <mat-icon>login</mat-icon> Sign In
-      </a>
+      @if (!isLoggedIn) {
+        <a mat-stroked-button routerLink="/auth">
+          <mat-icon>login</mat-icon> Sign In
+        </a>
+      }
     </div>
   </div>
 
@@ -17,22 +19,28 @@
     <h2 class="section-title">Featured Restaurants</h2>
     <mat-divider></mat-divider>
   
-    <div *ngIf="loading" class="loading-spinner">
-      <mat-spinner diameter="40"></mat-spinner>
-    </div>
+    @if (loading) {
+      <div class="loading-spinner">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    }
   
-    <div *ngIf="error" class="error-message">
-      <mat-card>
-        <mat-card-content>
-          <mat-icon color="warn">error</mat-icon> {{ error }}
-        </mat-card-content>
-      </mat-card>
-    </div>
+    @if (error) {
+      <div class="error-message">
+        <mat-card>
+          <mat-card-content>
+            <mat-icon color="warn">error</mat-icon> {{ error }}
+          </mat-card-content>
+        </mat-card>
+      </div>
+    }
   
     <div class="restaurant-grid">
-      <div *ngFor="let restaurant of featuredRestaurants" class="restaurant-item">
-        <app-restaurant-card [restaurant]="restaurant"></app-restaurant-card>
-      </div>
+      @for (restaurant of featuredRestaurants; track restaurant.restaurantId) {
+        <div class="restaurant-item">
+          <app-restaurant-card [restaurant]="restaurant"></app-restaurant-card>
+        </div>
+      }
     </div>
   </div>
 </div>

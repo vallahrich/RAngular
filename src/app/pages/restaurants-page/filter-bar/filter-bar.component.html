@@ -9,9 +9,9 @@
           <mat-label>Neighborhood</mat-label>
           <mat-select formControlName="neighborhood">
             <mat-option value="">All Neighborhoods</mat-option>
-            <mat-option *ngFor="let neighborhood of neighborhoods" [value]="neighborhood">
-              {{ neighborhood }}
-            </mat-option>
+            @for (neighborhood of neighborhoods; track neighborhood) {
+              <mat-option [value]="neighborhood">{{ neighborhood }}</mat-option>
+            }
           </mat-select>
         </mat-form-field>
 
@@ -19,9 +19,9 @@
           <mat-label>Cuisine</mat-label>
           <mat-select formControlName="cuisine">
             <mat-option value="">All Cuisines</mat-option>
-            <mat-option *ngFor="let cuisine of cuisines" [value]="cuisine">
-              {{ cuisine }}
-            </mat-option>
+            @for (cuisine of cuisines; track cuisine) {
+              <mat-option [value]="cuisine">{{ cuisine }}</mat-option>
+            }
           </mat-select>
         </mat-form-field>
 

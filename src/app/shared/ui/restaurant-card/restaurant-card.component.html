@@ -5,7 +5,9 @@
   </mat-card-header>
   <mat-card-content>
     <p><strong>Neighborhood:</strong> {{ restaurant.neighborhood }}</p>
-    <p *ngIf="restaurant.dietaryOptions"><strong>Dietary Options:</strong> {{ restaurant.dietaryOptions }}</p>
+    @if (restaurant.dietaryOptions) {
+      <p><strong>Dietary Options:</strong> {{ restaurant.dietaryOptions }}</p>
+    }
   </mat-card-content>
   <mat-card-actions>
     <a mat-raised-button color="primary" [routerLink]="['/restaurant', restaurant.restaurantId]">
