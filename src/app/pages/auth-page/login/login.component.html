@@ -1,7 +1,7 @@
-<form #loginForm="ngForm" (ngSubmit)="onSubmit()" class="login-form">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Username</mat-label>
-    <input matInput [(ngModel)]="loginModel.username" name="username" required #username="ngModel">
+    <input matInput [formControl]="username" name="username">
     <mat-icon matSuffix>person</mat-icon>
     @if (username.errors?.['required'] && (username.dirty || username.touched)) {
       <mat-error>Username is required</mat-error>
@@ -10,8 +10,8 @@
 
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Password</mat-label>
-    <input matInput [(ngModel)]="loginModel.password" name="password" 
-           [type]="hidePassword ? 'password' : 'text'" required #password="ngModel">
+    <input matInput [formControl]="password" name="password" 
+           [type]="hidePassword ? 'password' : 'text'">
     <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
       <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>

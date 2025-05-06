@@ -11,9 +11,9 @@
  * - Form state management during submission
  * - Success/error event emission to parent component
  */
-import { Component, EventEmitter, Input, Output, ViewChild, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -29,7 +29,7 @@ import { UserService } from '../../../services/user.service';
   standalone: true,
   imports: [
     NgIf,
-    FormsModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -44,14 +44,18 @@ export class PasswordSectionComponent implements OnInit {
   @Input() userId!: number;
   @Output() passwordUpdated = new EventEmitter<string>();
   @Output() error = new EventEmitter<string>();
-  @ViewChild('passwordForm') passwordForm!: NgForm;
   
-  // Model for two-way binding
-  passwordModel = {
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  };
+  // Form controls
+  currentPassword: FormControl = new FormControl('', [Validators.required]);
+  newPassword: FormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
+  confirmPassword: FormControl = new FormControl('', [Validators.required]);
+  
+  // Form group
+  passwordForm: FormGroup = new FormGroup({
+    currentPassword: this.currentPassword,
+    newPassword: this.newPassword,
+    confirmPassword: this.confirmPassword
+  });
   
   loading = false;
   hideCurrentPassword = true;
@@ -59,21 +63,33 @@ export class PasswordSectionComponent implements OnInit {
   hideConfirmPassword = true;
   passwordsNotMatching = false;
   
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private formBuilder: FormBuilder
+  ) {}
   
   ngOnInit(): void {
-    // Initialize if needed
+    // Setup password match validation
+    this.confirmPassword.valueChanges.subscribe(() => {
+      this.checkPasswordMatch();
+    });
+    
+    this.newPassword.valueChanges.subscribe(() => {
+      if (this.confirmPassword.value) {
+        this.checkPasswordMatch();
+      }
+    });
   }
   
   checkPasswordMatch(): void {
     this.passwordsNotMatching = 
-      this.passwordModel.newPassword !== this.passwordModel.confirmPassword &&
-      this.passwordModel.confirmPassword.length > 0;
+      this.newPassword.value !== this.confirmPassword.value &&
+      this.confirmPassword.value.length > 0;
   }
   
   onSubmit(): void {
-    // Check if form is available and valid
-    if (!this.passwordForm || !this.passwordForm.valid || this.passwordsNotMatching) {
+    // Check if form is valid
+    if (!this.passwordForm.valid || this.passwordsNotMatching) {
       return;
     }
     
@@ -81,21 +97,13 @@ export class PasswordSectionComponent implements OnInit {
     
     this.userService.updatePassword(
       this.userId,
-      this.passwordModel.currentPassword,
-      this.passwordModel.newPassword
+      this.currentPassword.value,
+      this.newPassword.value
     ).subscribe({
       next: () => {
         this.loading = false;
         // Reset form
-        this.passwordModel = {
-          currentPassword: '',
-          newPassword: '',
-          confirmPassword: ''
-        };
-        // Reset form state
-        if (this.passwordForm) {
-          this.passwordForm.resetForm();
-        }
+        this.passwordForm.reset();
         this.passwordUpdated.emit('Password updated successfully!');
       },
       error: (err: HttpErrorResponse) => {

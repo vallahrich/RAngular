@@ -4,10 +4,10 @@
   </mat-card-header>
 
   <mat-card-content>
-    <form #reviewForm="ngForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Rating</mat-label>
-        <mat-select [(ngModel)]="reviewModel.rating" name="rating" required #rating="ngModel">
+        <mat-select [formControl]="rating" name="rating">
           <mat-option [value]="1">1 - Poor</mat-option>
           <mat-option [value]="2">2 - Fair</mat-option>
           <mat-option [value]="3">3 - Good</mat-option>
@@ -21,9 +21,9 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Your Comments</mat-label>
-        <textarea matInput [(ngModel)]="reviewModel.comment" name="comment" rows="4" maxlength="1000" #comment="ngModel"
+        <textarea matInput [formControl]="comment" name="comment" rows="4" maxlength="1000"
           placeholder="Share your experience at this restaurant..."></textarea>
-        <mat-hint align="end">{{reviewModel.comment.length || 0}}/1000</mat-hint>
+        <mat-hint align="end">{{comment.value?.length || 0}}/1000</mat-hint>
         @if (comment.errors?.['maxlength']) {
           <mat-error>Comment cannot exceed 1000 characters</mat-error>
         }

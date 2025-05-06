@@ -1,7 +1,8 @@
-<form #registerForm="ngForm" (ngSubmit)="onSubmit()" class="register-form">
+<!-- src/app/pages/auth-page/register/register.component.html -->
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Username</mat-label>
-    <input matInput [(ngModel)]="registerModel.username" name="username" required minlength="3" #username="ngModel">
+    <input matInput [formControl]="username" name="username">
     <mat-icon matSuffix>person</mat-icon>
     <mat-error *ngIf="username.errors?.['required'] && (username.dirty || username.touched)">
       Username is required
@@ -13,7 +14,7 @@
 
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Email</mat-label>
-    <input matInput [(ngModel)]="registerModel.email" name="email" type="email" required email #email="ngModel">
+    <input matInput [formControl]="email" name="email" type="email">
     <mat-icon matSuffix>email</mat-icon>
     <mat-error *ngIf="email.errors?.['required'] && (email.dirty || email.touched)">
       Email is required
@@ -25,8 +26,7 @@
 
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Password</mat-label>
-    <input matInput [(ngModel)]="registerModel.password" name="password" [type]="hidePassword ? 'password' : 'text'"
-      required minlength="6" #password="ngModel" (ngModelChange)="checkPasswordMatch()">
+    <input matInput [formControl]="password" name="password" [type]="hidePassword ? 'password' : 'text'">
     <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
       <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
@@ -40,9 +40,8 @@
 
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Confirm Password</mat-label>
-    <input matInput [(ngModel)]="registerModel.confirmPassword" name="confirmPassword"
-      [type]="hideConfirmPassword ? 'password' : 'text'" required #confirmPassword="ngModel"
-      (ngModelChange)="checkPasswordMatch()">
+    <input matInput [formControl]="confirmPassword" name="confirmPassword"
+      [type]="hideConfirmPassword ? 'password' : 'text'">
     <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
       <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>

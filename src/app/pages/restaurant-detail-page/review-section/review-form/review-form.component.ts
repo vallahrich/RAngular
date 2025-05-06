@@ -12,9 +12,9 @@
  * - Error handling for API failures with specific messaging
  * - Event emission for form submission or cancellation
  */
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -33,7 +33,7 @@ import { AuthService } from 'src/app/services/auth.service';
   standalone: true,
   imports: [
     NgIf,
-    FormsModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -51,16 +51,15 @@ export class ReviewFormComponent implements OnInit {
   @Output() reviewSubmitted = new EventEmitter<Review>();
   @Output() canceled = new EventEmitter<void>();
   
-  @ViewChild('reviewForm') reviewForm!: NgForm;
+  // Form controls
+  rating: FormControl = new FormControl(5, [Validators.required]);
+  comment: FormControl = new FormControl('', [Validators.maxLength(1000)]);
   
-  reviewModel: Review = {
-    reviewId: 0,
-    userId: 0,
-    restaurantId: 0,
-    rating: 5,
-    comment: '',
-    createdAt: new Date()
-  };
+  // Form group
+  reviewForm: FormGroup = new FormGroup({
+    rating: this.rating,
+    comment: this.comment
+  });
   
   loading = false;
   error = '';
@@ -75,31 +74,38 @@ export class ReviewFormComponent implements OnInit {
   
   constructor(
     private reviewService: ReviewService,
-    private authService: AuthService
+    private authService: AuthService,
+    private formBuilder: FormBuilder
   ) {}
   
   ngOnInit(): void {
-    // Initialize with proper IDs
-    this.reviewModel.userId = this.currentUserId;
-    this.reviewModel.restaurantId = this.restaurantId;
-    
-    // If editing existing review, copy its properties
+    // If editing existing review, set form values
     if (this.review) {
-      this.reviewModel = {...this.review};
+      this.rating.setValue(this.review.rating);
+      this.comment.setValue(this.review.comment);
     }
   }
   
   onSubmit(): void {
-    // Check if form is available and valid
-    if (!this.reviewForm || !this.reviewForm.valid) {
+    // Check if form is valid
+    if (!this.reviewForm.valid) {
       return;
     }
 
     this.loading = true;
     this.error = '';
     
+    const reviewData: Review = {
+      reviewId: this.isEditing ? this.review!.reviewId : 0,
+      userId: this.currentUserId,
+      restaurantId: this.restaurantId,
+      rating: this.rating.value,
+      comment: this.comment.value || '',
+      createdAt: this.isEditing ? this.review!.createdAt : new Date()
+    };
+    
     if (this.isEditing) {
-      this.reviewService.updateReview(this.reviewModel).subscribe({
+      this.reviewService.updateReview(reviewData).subscribe({
         next: (response) => {
           this.loading = false;
           this.reviewSubmitted.emit(response);
@@ -109,7 +115,7 @@ export class ReviewFormComponent implements OnInit {
         }
       });
     } else {
-      this.reviewService.createReview(this.reviewModel).subscribe({
+      this.reviewService.createReview(reviewData).subscribe({
         next: (response) => {
           this.loading = false;
           this.reviewSubmitted.emit(response);

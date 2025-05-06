@@ -13,12 +13,11 @@
  * - Automatically redirects to login view after successful registration
  * - Emits completion event to parent component for tab switching
  */
-import { Component, EventEmitter, Output, ViewChild, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 
-// Add these Material imports
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,7 +31,7 @@ import { AuthService } from '../../../services/auth.service';
   standalone: true,
   imports: [
     NgIf,
-    FormsModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
@@ -45,15 +44,20 @@ import { AuthService } from '../../../services/auth.service';
 
 export class RegisterComponent implements OnInit {
   @Output() registered = new EventEmitter<boolean>();
-  @ViewChild('registerForm') registerForm!: NgForm;
   
-  // Model for two-way binding
-  registerModel = {
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  };
+  // Form controls
+  username: FormControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
+  email: FormControl = new FormControl('', [Validators.required, Validators.email]);
+  password: FormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
+  confirmPassword: FormControl = new FormControl('', [Validators.required]);
+  
+  // Form group
+  registerForm: FormGroup = new FormGroup({
+    username: this.username,
+    email: this.email,
+    password: this.password,
+    confirmPassword: this.confirmPassword
+  });
   
   loading = false;
   error = '';
@@ -62,35 +66,41 @@ export class RegisterComponent implements OnInit {
   hideConfirmPassword = true;
   passwordsNotMatching = false;
   
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private formBuilder: FormBuilder
+  ) { }
   
   ngOnInit(): void {
-    // Initialize if needed
+    // Setup password match validation
+    this.confirmPassword.valueChanges.subscribe(() => {
+      this.checkPasswordMatch();
+    });
+    
+    this.password.valueChanges.subscribe(() => {
+      if (this.confirmPassword.value) {
+        this.checkPasswordMatch();
+      }
+    });
   }
   
   checkPasswordMatch(): void {
     this.passwordsNotMatching = 
-      this.registerModel.password !== this.registerModel.confirmPassword &&
-      this.registerModel.confirmPassword.length > 0;
+      this.password.value !== this.confirmPassword.value &&
+      this.confirmPassword.value.length > 0;
   }
   
   onSubmit(): void {
-    // Check if form is available and valid
-    if (!this.registerForm || !this.registerForm.valid) {
-      return;
-    }
-    
-    // Check password match manually
-    if (this.registerModel.password !== this.registerModel.confirmPassword) {
-      this.passwordsNotMatching = true;
+    // Check if form is valid
+    if (!this.registerForm.valid || this.passwordsNotMatching) {
       return;
     }
 
     this.loading = true;
     this.authService.register(
-      this.registerModel.username,
-      this.registerModel.email,
-      this.registerModel.password
+      this.username.value,
+      this.email.value,
+      this.password.value
     ).subscribe({
       next: () => {
         this.loading = false;
