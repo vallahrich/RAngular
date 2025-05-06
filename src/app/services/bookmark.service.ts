@@ -1,3 +1,20 @@
+/**
+ * Bookmark Service
+ * 
+ * Service that manages restaurant bookmarking functionality in the application.
+ * Provides methods to interact with the bookmark-related endpoints of the API,
+ * allowing users to save, retrieve, and remove restaurant bookmarks.
+ * 
+ * Key features:
+ * - Retrieve all bookmarked restaurants for a specific user
+ * - Check if a specific restaurant is bookmarked by a user
+ * - Add new restaurant bookmarks
+ * - Remove existing bookmarks
+ * 
+ * All methods return Observables that emit the results of the API calls,
+ * following Angular's reactive programming pattern.
+ */
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';

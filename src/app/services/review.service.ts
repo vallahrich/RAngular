@@ -1,3 +1,24 @@
+/**
+ * Review Service
+ * 
+ * Service responsible for managing restaurant review operations throughout the application.
+ * Provides methods to create, retrieve, update, and delete restaurant reviews via API calls.
+ * 
+ * Key features:
+ * - Fetch all reviews for a specific restaurant
+ * - Retrieve a specific user's review for a restaurant
+ * - Create new restaurant reviews
+ * - Update existing reviews
+ * - Delete user reviews
+ * 
+ * The service handles API response transformation through a dedicated mapper method
+ * that ensures consistency in the Review model structure. Error handling is implemented
+ * for all operations with appropriate logging and error propagation.
+ * 
+ * Note: For 404 errors when fetching user reviews, errors are only propagated without
+ * console logging since this is an expected condition when a user hasn't reviewed a restaurant.
+ */
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';

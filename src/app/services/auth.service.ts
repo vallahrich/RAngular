@@ -1,3 +1,21 @@
+/**
+ * Authentication Service
+ * 
+ * Core service that handles user authentication operations including login, 
+ * registration, and logout functionality. This service maintains the current 
+ * user state across the application using an RxJS BehaviorSubject.
+ * 
+ * Key features:
+ * - Maintains user authentication state using BehaviorSubject
+ * - Stores user credentials in localStorage for session persistence
+ * - Provides methods for login, registration, and logout
+ * - Offers helper methods to check authentication status
+ * - Handles authentication header retrieval for API requests
+ * 
+ * The service communicates with the backend API for authentication operations
+ * and stores the returned authorization header for subsequent API calls.
+ */
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';

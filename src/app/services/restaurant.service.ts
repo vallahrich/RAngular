@@ -1,3 +1,22 @@
+/**
+ * Restaurant Service
+ * 
+ * Service that handles all restaurant-related API communications, providing
+ * methods to fetch, search, and filter restaurant data throughout the application.
+ * 
+ * Key features:
+ * - Retrieve individual restaurants by ID
+ * - Fetch all restaurants in the database
+ * - Filter restaurants based on multiple criteria (neighborhood, cuisine, price, dietary options)
+ * 
+ * The service implements error handling strategies:
+ * - For individual restaurant requests, errors are logged and re-thrown
+ * - For collection requests, errors are gracefully handled by returning empty arrays
+ *   to prevent UI disruptions
+ * 
+ * All API responses are mapped to the Restaurant model and returned as Observables.
+ */
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
