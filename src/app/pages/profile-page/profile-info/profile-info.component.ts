@@ -1,6 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { NgIf, DatePipe } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 import { UserService } from '../../../services/user.service';
@@ -10,6 +17,19 @@ import { ConfirmationDialogComponent } from '../../../shared/dialogs/confirmatio
 
 @Component({
   selector: 'app-profile-info',
+  standalone: true,
+  imports: [
+    NgIf,
+    DatePipe,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatDialogModule
+  ],
   templateUrl: './profile-info.component.html',
   styleUrls: ['./profile-info.component.css']
 })

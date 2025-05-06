@@ -1,12 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NgIf } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 import { Restaurant } from '../../models/restaurant.model';
 import { RestaurantService } from '../../services/restaurant.service';
 import { BookmarkService } from '../../services/bookmark.service';
 import { AuthService } from '../../services/auth.service';
+import { RestaurantInfoComponent } from './restaurant-info/restaurant-info.component';
+import { ReviewSectionComponent } from './review-section/review-section.component';
 
 @Component({
   selector: 'app-restaurant-detail-page',
+  standalone: true,
+  imports: [
+    NgIf,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    RestaurantInfoComponent,
+    ReviewSectionComponent
+  ],
   templateUrl: './restaurant-detail-page.component.html',
   styleUrls: ['./restaurant-detail-page.component.css']
 })

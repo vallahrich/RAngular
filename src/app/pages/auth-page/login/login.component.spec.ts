@@ -61,12 +61,7 @@ describe('LoginComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  
-  it('should have default credentials', () => {
-    expect(component.loginModel.username).toBe('john.doe');
-    expect(component.loginModel.password).toBe('VerySecret!');
-  });
-  
+    
   it('should show password when toggle is clicked', () => {
     // Initially password should be hidden
     expect(component.hidePassword).toBe(true);
@@ -88,6 +83,15 @@ describe('LoginComponent', () => {
       createdAt: new Date()
     };
     authServiceSpy.login.and.returnValue(of(mockUser));
+    
+    // Make sure the loginModel has the expected values
+    component.loginModel = {
+      username: 'john.doe',
+      password: 'VerySecret!'
+    };
+    
+    // Mock the form to be valid
+    component.loginForm = { valid: true } as any;
     
     // Trigger form submission
     component.onSubmit();

@@ -1,12 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgIf } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { User } from 'src/app/models/user.model';
+import { ProfileInfoComponent } from './profile-info/profile-info.component';
+import { PasswordSectionComponent } from './password-section/password-section.component';
+import { BookmarksSectionComponent } from './bookmarks-section/bookmarks-section.component';
 
 @Component({
   selector: 'app-profile-page',
+  standalone: true,
+  imports: [
+    NgIf,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    ProfileInfoComponent,
+    PasswordSectionComponent,
+    BookmarksSectionComponent
+  ],
   templateUrl: './profile-page.component.html',
   styleUrls: ['./profile-page.component.css']
 })

@@ -1,11 +1,29 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { NgIf, NgFor } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+
 import { Restaurant } from '../../../models/restaurant.model';
 import { BookmarkService } from '../../../services/bookmark.service';
 import { ConfirmationDialogComponent } from '../../../shared/dialogs/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-bookmarks-section',
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    RouterLink,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatDialogModule
+  ],
   templateUrl: './bookmarks-section.component.html',
   styleUrls: ['./bookmarks-section.component.css']
 })

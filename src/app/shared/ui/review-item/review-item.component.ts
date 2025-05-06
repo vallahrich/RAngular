@@ -1,8 +1,23 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgIf, DatePipe } from '@angular/common';
+
 import { Review } from '../../../models/review.model';
 
 @Component({
   selector: 'app-review-item',
+  standalone: true,
+  imports: [
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    NgIf,
+    DatePipe
+  ],
   templateUrl: './review-item.component.html',
   styleUrls: ['./review-item.component.css']
 })

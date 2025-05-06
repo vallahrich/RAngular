@@ -1,10 +1,29 @@
 import { Component, EventEmitter, Input, Output, ViewChild, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-password-section',
+  standalone: true,
+  imports: [
+    NgIf,
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './password-section.component.html',
   styleUrls: ['./password-section.component.css']
 })

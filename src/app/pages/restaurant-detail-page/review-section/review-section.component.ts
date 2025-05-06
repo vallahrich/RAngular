@@ -1,10 +1,31 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { NgIf, NgFor } from '@angular/common';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 import { Review } from '../../../models/review.model';
 import { ReviewService } from '../../../services/review.service';
 import { AuthService } from '../../../services/auth.service';
+import { ReviewItemComponent } from '../../../shared/ui/review-item/review-item.component';
+import { ReviewFormComponent } from './review-form/review-form.component';
 
 @Component({
   selector: 'app-review-section',
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    MatDividerModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    ReviewItemComponent,
+    ReviewFormComponent
+  ],
   templateUrl: './review-section.component.html',
   styleUrls: ['./review-section.component.css']
 })

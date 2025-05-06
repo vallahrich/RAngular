@@ -1,12 +1,33 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+
 import { Review } from 'src/app/models/review.model';
 import { ReviewService } from 'src/app/services/review.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-review-form',
+  standalone: true,
+  imports: [
+    NgIf,
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatIconModule
+  ],
   templateUrl: './review-form.component.html',
   styleUrls: ['./review-form.component.css']
 })

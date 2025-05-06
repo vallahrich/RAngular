@@ -1,11 +1,28 @@
 import { Component, Input, ViewChild, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
+  imports: [
+    NgIf,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -42,7 +59,7 @@ export class LoginComponent implements OnInit {
       }
     });
     
-    // Pre-populate with standard credentials from Lecture 9
+    // Pre-populate with standard credentials
     this.loginModel.username = 'john.doe';
     this.loginModel.password = 'VerySecret!';
   }

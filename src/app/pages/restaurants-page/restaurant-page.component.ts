@@ -1,10 +1,27 @@
 import { Component, OnInit } from '@angular/core';
+import { NgIf, NgFor } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 import { Restaurant } from '../../models/restaurant.model';
 import { RestaurantService } from '../../services/restaurant.service';
 import { AuthService } from '../../services/auth.service';
+import { FilterBarComponent } from './filter-bar/filter-bar.component';
+import { RestaurantCardComponent } from '../../shared/ui/restaurant-card/restaurant-card.component';
 
 @Component({
   selector: 'app-restaurants-page',
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    MatCardModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    FilterBarComponent,
+    RestaurantCardComponent
+  ],
   templateUrl: './restaurant-page.component.html',
   styleUrls: ['./restaurant-page.component.css']
 })
